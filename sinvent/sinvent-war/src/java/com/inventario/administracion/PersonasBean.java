@@ -191,7 +191,7 @@ public abstract class PersonasBean implements Serializable {
                     parametros.put(";orden", "o." + scs[0].getPropertyName()
                             + (scs[0].isAscending() ? " ASC" : " DESC"));
                 }
-                String where = " o.activo=true and o.rol like '%#U%'"; // ( and o.rol  like '%" + rol + "%') 
+                String where = " o.activo=true and o.rol like " + "'%" + rol + "%'";
                 for (Map.Entry e : map.entrySet()) {
                     String clave = (String) e.getKey();
                     String valor = (String) e.getValue();

@@ -38,9 +38,9 @@ public class UsuariosSistemaBean extends PersonasBean implements Serializable {
     public UsuariosSistemaBean() {
         super.setRol("#U"); //Usuario del sistema
     }
-    
+
     @Override
-    protected boolean validar(){
+    protected boolean validar() {
         if ((entidad.getPin() == null) || (entidad.getPin().isEmpty())) {
             MensajesErrores.advertencia("CI o RUC es obligatorio");
             return true;
@@ -61,7 +61,6 @@ public class UsuariosSistemaBean extends PersonasBean implements Serializable {
             MensajesErrores.advertencia("User ID es obligatorio");
             return true;
         }
-
 
         Map parametros = new HashMap();
         parametros.put(";where", " o.activo = true and o.userid=:userid");
