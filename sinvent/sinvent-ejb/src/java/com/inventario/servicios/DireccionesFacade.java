@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class DireccionesFacade extends AbstractFacade<Direcciones> {
-    @PersistenceContext(unitName = "Inventarios-ejbPU")
+    @PersistenceContext(unitName = "sinvent-ejbPU")
     private EntityManager em;
 
     @Override

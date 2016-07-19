@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class ProveedoresFacade extends AbstractFacade<Proveedores> {
-    @PersistenceContext(unitName = "Inventarios-ejbPU")
+    @PersistenceContext(unitName = "sinvent-ejbPU")
     private EntityManager em;
 
     @Override
