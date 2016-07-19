@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Stateless
 public class EntidadesFacade extends AbstractFacade<Entidades> {
@@ -46,4 +46,5 @@ public class EntidadesFacade extends AbstractFacade<Entidades> {
         }
         return lista.get(0);
     }
+
 }

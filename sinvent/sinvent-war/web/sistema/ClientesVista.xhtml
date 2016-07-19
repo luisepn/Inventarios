@@ -79,7 +79,7 @@
                             </ace:column> 
                             <ace:column  headerText="Cédula de Identidad" sortBy="#{item.pin}" style="text-align: left"
                                          filterBy="#{item.pin}" filterMatchMode="contains">
-                                <h:outputText  value="#{item.pin}"/>
+                                <h:outputText  value="#{item.pin}"/>                                
                             </ace:column>
                             <ace:column  headerText="Apellidos" sortBy="#{item.apellidos}" style="text-align: left"
                                          filterBy="#{item.apellidos}" filterMatchMode="contains">
@@ -111,13 +111,17 @@
                             <f:facet name="label">Inf. General</f:facet>
                             <ice:panelGrid columns="2">
                                 <ice:outputLabel value="C.I.:" for="pin" />
-                                <ice:inputText id="pin" value="#{clientes.entidad.pin}" title="Pin"/>
+                                <ice:inputText id="pin" value="#{clientes.entidad.pin}" title="Pin">
+                                    <f:validator  validatorId="com.inventario.utilitarios.ValidadorRuc" />
+                                </ice:inputText>
                                 <ice:outputLabel value="Nombres:" for="nombres" />
                                 <ice:inputText id="nombres" value="#{clientes.entidad.nombres}" title="Nombres" />
                                 <ice:outputLabel value="Apellidos:" for="apellidos" />
                                 <ice:inputText id="apellidos" value="#{clientes.entidad.apellidos}" title="Apellidos" />
                                 <ice:outputLabel value="e-mail:" for="email" />
-                                <ice:inputText id="email" value="#{clientes.entidad.email}" title="Email" />
+                                <ice:inputText id="email" value="#{clientes.entidad.email}" title="Email" >
+                                    <f:validator  validatorId="com.inventario.utilitarios.ValidadorEmail" />
+                                </ice:inputText>
                             </ice:panelGrid>
                         </ace:tabPane>
                         <ace:tabPane label="Dirección">                           
