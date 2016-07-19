@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+    Document   : CodigosVista
+    Created on : Sep 20, 2011, 3:41:19 PM
+    Author     : luisfernando
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      >
+    <h:head>
+
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../plantillas/plantilla.xhtml">
+            <icecore:singleSubmit/>
+            <!-- Aqui va todo el codigo de la pagina -->
+            <ui:define name="content">
+                <ace:panel id="panel"
+                           header="#{usuariosSistema.perfil.menu.texto}"
+                           closable="false"
+                           toggleable="true"
+                           >
+                    <ice:panelGrid columns="7">
+
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{usuariosSistema.buscar()}"/>
+                            <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{usuariosSistema.crear()}"/>
+                        </ace:menuBar>
+                        <ice:outputConnectionStatus/>
+                        <ace:messages/>
+                    </ice:panelGrid>
+
+                </ace:panel>
+
+                <ace:panel 
+                    header="Resultado Búsqueda"
+                    closable="false"
+                    toggleable="true"
+                    >
+                    <h:panelGrid columns="3" styleClass="centeredPanelGrid">
+                        <ice:outputLabel  value="Exportar a:"/>
+                        <h:selectOneRadio  value="#{usuariosSistema.formulario.pantalla}" required="true">
+                            <f:ajax disabled="false"/>
+                            <f:selectItem itemValue="csv" itemLabel="CSV"/>
+                            <f:selectItem itemValue="pdf" itemLabel="PDF"/>
+                            <f:selectItem itemValue="xls" itemLabel="XLS"/>
+                            <f:selectItem itemValue="xml" itemLabel="XML"/>
+                        </h:selectOneRadio>
+                        <ace:dataExporter id="dataExporter" 
+                                          label="Exportar Archivo" 
+                                          type="#{usuariosSistema.formulario.pantalla}" 
+                                          target="tabla" fileName="datos"/>
+                    </h:panelGrid>
+                    <!--                    <h:panelGrid styleClass="centeredPanelGrid">
+                                            
+                                        </h:panelGrid>-->
+                    <h:panelGrid width="100%">
+                        <ace:dataTable id="tabla" 
+                                       paginatorAlwaysVisible="true"
+                                       value="#{usuariosSistema.entidades}"
+                                       var="item"
+                                       paginator="true"
+                                       lazy="true"
+                                       resizableColumns="true"
+                                       rowIndexVar="row"
+                                       paginatorPosition="both"
+                                       rowsPerPageTemplate="5,10,15,30,50,100"
+                                       paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                       rows="30"
+                                       >
+                            <!--                            <ace:column  headerText="Registro" style="text-align: right">
+                                                            <h:outputText value="#{row+1}"/>
+                                                        </ace:column>-->
+                            <ace:column headerText="Acciones" style="text-align: left">
+                                <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
+                                    <ace:menuItem action="#{usuariosSistema.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                    <ace:menuItem action="#{usuariosSistema.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                    <ace:menuItem action="#{usuariosSistema.modificarClave()}" value="Cambiar Clave" icon="ui-icon ui-icon-key"/>
+                                </ace:menuButton>
+                            </ace:column> 
+                            <ace:column  headerText="Cédula de Identidad" sortBy="#{item.pin}" style="text-align: left"
+                                         filterBy="#{item.pin}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.pin}"/>
+                            </ace:column>
+                            <ace:column  headerText="Apellidos" sortBy="#{item.apellidos}" style="text-align: left"
+                                         filterBy="#{item.apellidos}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.apellidos}"/>
+                            </ace:column>
+                            <ace:column  headerText="Nombres" sortBy="#{item.nombres}" style="text-align: left"
+                                         filterBy="#{item.nombres}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.nombres}"/>
+                            </ace:column>
+                            <ace:column  headerText="email" sortBy="#{item.email}" style="text-align: left"
+                                         filterBy="#{item.email}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.email}"/>
+                            </ace:column>
+                            <ace:column  headerText="User id" sortBy="#{item.userid}" style="text-align: left"
+                                         filterBy="#{item.userid}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.userid}"/>
+                            </ace:column>
+                            <ace:column  headerText="Fecha de Nacimiento" sortBy="#{item.fecha}" style="text-align: left"
+                                         >
+                                <h:outputText  value="#{item.fecha}">
+                                    <f:convertDateTime  parent="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </ace:column>
+
+                        </ace:dataTable>
+                    </h:panelGrid>
+                </ace:panel>
+                <ace:dialog 
+                    header="#{usuariosSistema.perfil.menu.texto}"
+                    closable="false"
+                    modal="true"
+                    draggable="false"
+                    showEffect="clip"
+                    hideEffect="fade"
+                    rendered="#{usuariosSistema.formulario.mostrar}"
+                    visible="#{usuariosSistema.formulario.mostrar}">
+                    <ace:tabSet>
+                        <ace:tabPane>
+                            <f:facet name="label">Inf. General</f:facet>
+                            <ice:panelGrid columns="2">
+                                <ice:outputLabel value="C.I.:" for="pin" />
+                                <ice:inputText id="pin" value="#{usuariosSistema.entidad.pin}" title="Pin"/>
+                                <ice:outputLabel value="Nombres:" for="nombres" />
+                                <ice:inputText id="nombres" value="#{usuariosSistema.entidad.nombres}" title="Nombres" />
+                                <ice:outputLabel value="Apellidos:" for="apellidos" />
+                                <ice:inputText id="apellidos" value="#{usuariosSistema.entidad.apellidos}" title="Apellidos" />
+                                <ice:outputLabel value="e-mail:" for="email" />
+                                <ice:inputText id="email" value="#{usuariosSistema.entidad.email}" title="Email" />
+                                <ice:outputLabel value="Userid:" for="userid" />
+                                <ice:inputText id="userid" value="#{usuariosSistema.entidad.userid}" title="Userid" />
+
+                                <ice:outputLabel value="Fecha de Nacimiento:" />
+                                <ace:dateTimeEntry navigator="true" id="fecha" value="#{usuariosSistema.entidad.fecha}" 
+                                                   popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
+                                                   pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </ace:dateTimeEntry>
+
+
+                            </ice:panelGrid>
+                        </ace:tabPane>
+
+                    </ace:tabSet>
+                    <ice:panelGroup>
+
+                    </ice:panelGroup>
+                    <ice:panelGrid columns="1" width="100%">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{usuariosSistema.formulario.nuevo}" 
+                                          action="#{usuariosSistema.insertar()}"/>
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                          action="#{usuariosSistema.grabar()}" 
+                                          rendered="#{usuariosSistema.formulario.modificar}" />
+                            <ace:menuItem action="#{usuariosSistema.borrar()}" 
+                                          icon="ui-icon ui-icon-trash" 
+                                          value="Esta seguro de Borrar el registro?" 
+                                          rendered="#{usuariosSistema.formulario.borrar}"/>
+                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                          action="#{usuariosSistema.cancelar()}"/>
+                        </ace:menuBar>
+                        <ace:messages />
+                        <!--<h:messages style="color: red;font-style: italic;font-weight: bold"/>--> 
+                    </ice:panelGrid>
+                </ace:dialog>
+
+                <ace:dialog 
+                    header="#{usuariosSistema.perfil.menu.texto}"
+                    closable="false"
+                    modal="true"
+                    draggable="false"
+                    showEffect="clip"
+                    hideEffect="fade"
+                    rendered="#{usuariosSistema.formularioClave.mostrar}"
+                    visible="#{usuariosSistema.formularioClave.mostrar}">
+                    <ice:panelGrid columns="2">
+                        <ice:outputLabel value="Clave Nueva :" />
+                        <ice:inputSecret value="#{usuariosSistema.entidad.pwd}"/>
+
+                    </ice:panelGrid>
+                    <ice:panelGrid columns="2">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" action="#{usuariosSistema.grabarClave()}" />
+                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                          action="#{usuariosSistema.formularioClave.cancelar()}"/>
+                        </ace:menuBar>
+                        <ace:messages/>
+
+                    </ice:panelGrid>
+                </ace:dialog>
+
+            </ui:define>
+            <!-- Fin -->
+        </ui:composition>
+
+    </h:body>
+
+</html>

@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component" >
+    <h:body>
+        <ui:composition template="../plantillas/plantilla.xhtml">
+            <icecore:singleSubmit/>
+            <!-- Aqui va todo el codigo de la pagina -->
+            <ui:define name="content">
+
+
+
+                <ace:panel header="#{datos.perfil.menu.texto}">
+                    <h:panelGrid columns="2">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Nuevo"
+                                          icon="ui-icon ui-icon-document"  
+                                          action="#{datos.nuevo()}"/>
+                            <ace:menuItem value="Buscar"
+                                          icon="ui-icon ui-icon-search"  
+                                          action="#{datos.buscar()}"/>
+                        </ace:menuBar>
+                    </h:panelGrid>
+
+                    <ace:messages/>
+                </ace:panel>   
+                <ace:panel header="Resultado Búsqueda">
+                    <h:panelGrid columns="1" width="100%">
+                        <ace:dataTable value="#{datos.listaDatos}" 
+                                       var="item"
+                                       paginatorAlwaysVisible="true"
+                                       paginator="true"
+                                       resizableColumns="true"
+                                       lazy="false"
+                                       rowIndexVar="row"
+                                       paginatorPosition="both"
+                                       rowsPerPageTemplate="10,15,50,100"
+                                       currentPageReportTemplate="Registro {startRecord}/{totalRecords} Página {currentPage}/{totalPages}"
+                                       paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                       rows="10" 
+                                       binding="#{datos.formulario.fila}">
+                            <ace:column headerText="Acciones" style="text-align: left;">
+                                <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
+                                    <ace:menuItem action="#{datos.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                    <ace:menuItem action="#{datos.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                </ace:menuButton>
+                            </ace:column>
+                            <ace:row condition="group" groupBy="#{item.grupo}" pos="before" styleClass="grupo">
+                                <ace:column colspan="8">
+                                    #{item.grupo}
+                                </ace:column>
+                            </ace:row>
+                            <ace:column headerText="Orden"  style="text-align: left;" >
+                                <h:outputText value="#{item.orden}"/>
+                            </ace:column>
+                            <ace:column headerText="Texto" style="text-align: left;"  >
+                                <h:outputText value="#{item.texto}"/>
+                            </ace:column>
+                            <ace:column  headerText="Tipos  de Datos" style="text-align: left" >
+                                <h:outputText value="#{item.tipodato.nombre}" />
+<!--                                        <h:outputText value="Lista para Escojer"  rendered="${item.tipodato==0}"/>
+                               <h:outputText value="Texto"  rendered="${item.tipodato==2}"/>
+                               <h:outputText value="Numérico"  rendered="${item.tipodato==1}"/>
+                               <h:outputText value="Fecha"  rendered="${item.tipodato==3}"/>
+                               <h:outputText value="Verdadero ó Falso"  rendered="${item.tipodato==4}"/>-->
+                            </ace:column>
+                            <ace:column  headerText="Imprimible[SI/NO]" style="text-align: left" >
+                                <h:outputText value="SI"  rendered="${item.imprimible}"/>
+                                <h:outputText value="NO"  rendered="${!item.imprimible}"/>
+                            </ace:column>
+                            <ace:column headerText="Explicación" style="text-align: left; "  >
+                                <h:outputText value="#{item.ayuda}"/>
+                            </ace:column>
+                        </ace:dataTable> 
+                    </h:panelGrid>
+                </ace:panel>
+
+
+                <ace:dialog 
+                    header="#{datos.perfil.menu.texto}"
+                    modal="true"
+                    closable="false" 
+                    width="406"
+                    visible="#{datos.formulario.mostrar}" 
+                    rendered="#{datos.formulario.mostrar}">
+                    <ice:panelGroup>
+
+
+                        <ace:panel>     
+                            <h:panelGrid columns="2">       
+                                <h:outputLabel value="Grupo:"/> 
+                                <ice:selectOneMenu value="#{datos.dato.grupo}">
+                                    <f:selectItems value="#{tablaDeCodigos.comboGrupoDatos}"/>
+                                </ice:selectOneMenu>   
+                                <h:outputLabel value="Tipo de Dato:"/> 
+                                <ice:selectOneMenu value="#{datos.dato.tipodato}" partialSubmit="true">
+                                    <f:selectItems value="#{tablaDeCodigos.comboTipoDatos}" />
+                                </ice:selectOneMenu> 
+                                <h:outputLabel value="Orden:"/>
+                                <h:inputText  value="#{datos.dato.orden}"/>
+                                <h:outputLabel value="Texto:"/>
+                                <h:inputTextarea cols="35" rows="3"  value="#{datos.dato.texto}" />
+                                <h:outputLabel value="Explicación:"/>
+                                <h:inputTextarea cols="35" rows="3" value="#{datos.dato.ayuda}" />
+                            </h:panelGrid>
+
+
+
+                        </ace:panel>
+                        <ace:panel rendered="#{datos.dato.tipodato!=null and (datos.dato.tipodato.codigo eq 'LST' or datos.dato.tipodato.codigo eq 'NUM')}" >
+
+
+                            <ace:menuBar autoSubmenuDisplay="true" >               
+                                <ace:menuItem value="Agregar" icon="ui-icon ui-icon-document" 
+                                              action="#{datos.nuevoRango()}"/>  
+                            </ace:menuBar>
+                            <ace:dataTable 
+                                value="#{datos.listaDatoRangos}"
+                                var="rango"
+                                resizableColumns="true"
+                                lazy="false"
+                                rowIndexVar="row"
+                                binding="#{datos.formularioRangos.fila}">
+                                <f:facet name="header" >#{datos.dato.tipodato.descripcion}</f:facet>
+                                <ace:column headerText="Acciones" style="text-align: left; width: 72px;" >
+                                    <ace:menuButton  effect="slide" effectDuration="200" value="..." >
+                                        <ace:menuItem action="#{datos.modificaRango()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                        <ace:menuItem action="#{datos.eliminaRango()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                    </ace:menuButton>
+                                </ace:column>
+                                <ace:column headerText="Nro." style="width: 44px;">
+                                    <h:outputText value="#{row+1}"/>
+                                </ace:column>
+                                <ace:column headerText="Texto" style="text-align: left" rendered="#{datos.dato.tipodato.codigo eq 'LST'}">
+                                    <h:outputText value="#{rango.texto}"/>
+                                </ace:column>
+                                <ace:column headerText="Máximo" style="text-align: right" rendered="#{datos.dato.tipodato.codigo eq 'NUM'}">
+                                    <h:outputText value="#{rango.maximo}"/>
+                                </ace:column>
+                                <ace:column headerText="Mímimo" style="text-align: right" rendered="#{datos.dato.tipodato.codigo eq 'NUM'}">
+                                    <h:outputText value="#{rango.minimo}"/>
+                                </ace:column>
+                            </ace:dataTable> 
+
+
+                        </ace:panel>
+                    </ice:panelGroup>
+                    <ace:messages/>
+                    <ace:menuBar autoSubmenuDisplay="true" >
+                        <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                      rendered="#{datos.formulario.nuevo}" 
+                                      action="#{datos.insertar()}"/>
+                        <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                      action="#{datos.grabar()}" 
+                                      rendered="#{datos.formulario.modificar}" />
+                        <ace:menuItem action="#{datos.borrar()}" 
+                                      value="Está seguro de Borrar el registro?" 
+                                      rendered="#{datos.formulario.borrar}"
+                                      icon="ui-icon ui-icon-trash"/>
+                        <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                      action="#{datos.cancelar()}"/>
+                    </ace:menuBar>
+                </ace:dialog>
+
+
+                <ace:dialog header="Valor"
+                            modal="true" closable="false" 
+                            visible="#{datos.formularioRangos.mostrar}" 
+                            rendered="#{datos.formularioRangos.mostrar}" >
+                    <h:panelGrid columns="2" rendered="#{datos.dato.tipodato.codigo eq 'LST'}">                              
+                        <h:outputLabel value="Texto:"/> 
+                        <h:inputText value="#{datos.datoRango.texto}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" rendered="#{datos.dato.tipodato.codigo eq 'NUM'}" >                              
+                        <h:outputLabel value="Mínimo:"/> 
+                        <h:inputText value="#{datos.datoRango.minimo}" />
+                        <h:outputLabel value="Máximo:"/> 
+                        <h:inputText value="#{datos.datoRango.maximo}" />
+                    </h:panelGrid>
+                    <ace:messages/>  
+                    <ace:menuBar autoSubmenuDisplay="true" >               
+                        <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                      rendered="#{datos.formularioRangos.nuevo}" 
+                                      action="#{datos.insertarRango()}"/>  
+                        <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                      action="#{datos.grabarRango()}" 
+                                      rendered="#{datos.formularioRangos.modificar}" />                         
+                        <ace:menuItem action="#{datos.borrarRango()}" 
+                                      value="Está seguro de Borrar el registro?" 
+                                      rendered="#{datos.formularioRangos.borrar}"
+                                      icon="ui-icon ui-icon-trash"/>
+                        <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                      action="#{datos.formularioRangos.cancelar()}" immediate="true"/> 
+                    </ace:menuBar>
+
+
+                </ace:dialog>
+
+
+            </ui:define>
+            <!-- Fin -->
+        </ui:composition>
+    </h:body>
+</html>

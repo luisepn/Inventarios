@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+    Document   : PrincipalVista
+    Created on : 28/08/2011, 11:31:00 AM
+    Author     : luisfernando
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      >
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <h:form id="forma">
+            <ui:composition template="../plantillas/plantilla.xhtml">
+
+                <!-- Aqui va todo el codigo de la pagina -->
+                <ui:define name="content">
+                    <ace:panel id="panel"
+                               header="Cambio de Clave"
+                               closable="false"
+                               toggleable="true"
+                               >
+
+                        <ice:panelGrid columns="2">
+
+                            <ice:outputLabel value="Clave Actual :" />
+                            <ice:inputSecret value="#{seguridadBean.claveAnterior}"/>
+                            <ice:outputLabel value="Clave Nueva :" />
+                            <ice:inputSecret value="#{seguridadBean.claveNueva}"/>
+                            <ice:outputLabel value="Retipee Clave nueva:" />
+                            <ice:inputSecret  value="#{seguridadBean.claveRetpeada}"/>
+                        </ice:panelGrid>
+                        
+                        <ice:panelGrid columns="2">
+                            <ace:menuBar autoSubmenuDisplay="true" >
+                                <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" action="#{seguridadBean.cambio()}" />
+                            </ace:menuBar>
+                            <ace:messages/>
+                            
+                        </ice:panelGrid>
+                    </ace:panel>
+                </ui:define>
+                <!-- Fin -->
+            </ui:composition>
+        </h:form>
+    </h:body>
+
+</html>

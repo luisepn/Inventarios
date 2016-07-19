@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+    Document   : CodigosVista
+    Created on : Sep 20, 2011, 3:41:19 PM
+    Author     : luisfernando
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      >
+    <h:head>
+
+    </h:head>
+    <h:body >
+
+        <ui:composition template="../plantillas/plantilla.xhtml">
+            <icecore:singleSubmit/>
+            <!-- Aqui va todo el codigo de la pagina -->
+            <ui:define name="content">
+                <ace:panel id="panel"
+                           header="#{codigosMaestros.perfil.menu.texto}"
+                           closable="false"
+                           toggleable="true"
+                           >
+                    <ice:panelGrid columns="2">
+                        <ice:outputLabel value="Nombre:" for="nombrem" />
+                        <ice:inputText id="nombrem" value="#{codigosMaestros.nombre}" title="Nombre" />
+                    </ice:panelGrid>
+
+                    <ice:panelGrid columns="2">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{codigosMaestros.buscar()}"/>
+                            <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{codigosMaestros.crear()}"/>
+                        </ace:menuBar>
+                        <ice:outputConnectionStatus/>
+
+                    </ice:panelGrid>
+
+                    <ace:messages/>
+                </ace:panel>
+                <!--                <ace:panel>
+                                    
+                                </ace:panel>-->
+                <ace:panel 
+                    header="Resultado Búsqueda"
+                    closable="false"
+                    toggleable="true"
+                    >
+                    <h:panelGrid columns="3" styleClass="centeredPanelGrid">
+                        <h:outputLabel  value="Exportar a:"/>
+                        <h:selectOneRadio  value="#{codigosMaestros.formulario.pantalla}" required="true">
+                            <f:ajax disabled="false"/>
+                            <f:selectItem itemValue="csv" itemLabel="CSV"/>
+                            <f:selectItem itemValue="pdf" itemLabel="PDF"/>
+                            <f:selectItem itemValue="xls" itemLabel="XLS"/>
+                            <f:selectItem itemValue="xml" itemLabel="XML"/>
+                        </h:selectOneRadio>
+                        <ace:dataExporter id="dataExporter" 
+                                          label="Exportar Archivo" 
+                                          type="#{codigosMaestros.formulario.pantalla}" 
+                                          target="tabla" fileName="datos"/>
+                    </h:panelGrid>
+                    <!--                    <h:panelGrid styleClass="centeredPanelGrid">
+                                            
+                                        </h:panelGrid>-->
+                    <h:panelGrid width="100%">
+                        <ace:dataTable id="tabla" 
+                                       paginatorAlwaysVisible="true"
+                                       value="#{codigosMaestros.maestros}"
+                                       var="item"
+                                       paginator="true"
+                                       resizableColumns="true"
+                                       rowIndexVar="row"
+                                       paginatorPosition="both"
+                                       rowsPerPageTemplate="5,10,15,50,all"
+                                       paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                       rows="5"
+                                       binding="#{codigosMaestros.formulario.fila}">
+                            <!--                            <ace:column  headerText="Registro" style="text-align: right">
+                                                            <h:outputText value="#{row+1}"/>
+                                                        </ace:column>-->
+                            <ace:column headerText="Acciones" style="text-align: left">
+                                <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
+                                    <ace:menuItem action="#{codigosMaestros.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                    <ace:menuItem action="#{codigosMaestros.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                </ace:menuButton>
+                            </ace:column> 
+                            <ace:column  headerText="Código" sortBy="#{item.codigo}" style="text-align: left">
+                                <h:outputText  value="#{item.codigo}"/>
+                            </ace:column>
+                            <ace:column  headerText="Nombre" sortBy="#{item.nombre}" style="text-align: left">
+                                <h:outputText  value="#{item.nombre}"/>
+                            </ace:column>
+
+                        </ace:dataTable>
+                    </h:panelGrid>
+                </ace:panel>
+                <ace:dialog 
+                    header="#{codigosMaestros.perfil.menu.texto}"
+                    closable="false"
+                    modal="true"
+                    draggable="false"
+                    showEffect="clip"
+                    hideEffect="fade"
+                    rendered="#{codigosMaestros.formulario.mostrar}"
+                    visible="#{codigosMaestros.formulario.mostrar}">
+                    <ice:panelGroup>
+                        <ice:panelGrid columns="2">
+                            <ice:outputLabel value="Código:" for="codigo" />
+                            <ice:inputText id="codigo" value="#{codigosMaestros.maestro.codigo}" title="Código" disabled="#{!codigosMaestros.formulario.nuevo}"/>
+                            <ice:outputLabel value="Nombre:" for="nombre" />
+                            <ice:inputText id="nombre" value="#{codigosMaestros.maestro.nombre}" title="Nombre" />
+                            <!--                            <ice:outputLabel value="Módulo:" />
+                                                        <ice:selectOneMenu value="#{codigosMaestros.maestro.mudulo}">
+                                                            <f:selectItems value="#{codigos.comboModulos}"/>
+                                                        </ice:selectOneMenu>-->
+                        </ice:panelGrid>
+                    </ice:panelGroup>
+                    <ice:panelGrid columns="1" width="100%">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{codigosMaestros.formulario.nuevo}" 
+                                          action="#{codigosMaestros.insertar()}"/>
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                          action="#{codigosMaestros.grabar()}" 
+                                          rendered="#{codigosMaestros.formulario.modificar}" />
+                            <ace:menuItem action="#{codigosMaestros.borrar()}" 
+                                          icon="ui-icon ui-icon-trash" 
+                                          value="¿Está seguro de Borrar el registro?" 
+                                          rendered="#{codigosMaestros.formulario.borrar}"/>
+                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                          action="#{codigosMaestros.cancelar()}"/>
+                        </ace:menuBar>
+                        <ace:messages />
+                        <!--<h:messages style="color: red;font-style: italic;font-weight: bold"/>--> 
+                    </ice:panelGrid>
+                </ace:dialog>
+
+            </ui:define>
+            <!-- Fin -->
+        </ui:composition>
+
+    </h:body>
+
+</html>

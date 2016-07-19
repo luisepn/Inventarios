@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component">
+    <body >
+        <ui:composition>
+            <h:panelGrid columns="3" width="100%" style="margin-top: 30px; text-align: left; margin-left: 30px;">
+                <ice:graphicImage alt="EVM" url="../resources/evlogo.png" value="../resources/evlogo.png" height="100" />
+                <ice:outputText value="#{seguridadBean.centro.nombre}" rendered="#{seguridadBean.centro!=null}" style="font-size: 20px; color: #195f88; font-weight: 900;"/>
+                <ice:graphicImage value="#{seguridadBean.centro.logotipo!=null? archivosBean.traerArchivo(seguridadBean.centro.logotipo).archivo:null}" id="centro"  alt="logo" height="100"  rendered="#{seguridadBean.centro!=null}"/>
+            </h:panelGrid>  
+            <h:panelGrid columns="2" width="100%" style="text-align: left;margin-top: 5px" rendered="#{seguridadBean.modelo!=null}" columnClasses="column1,column2" >
+                <ace:menuBar id="mainBar" autoSubmenuDisplay="true" model="#{seguridadBean.modelo}"  style="text-align: left; vertical-align: central; "/>
+                <ace:menuButton id="menuButton100" effect="slide" effectDuration="200"  value="Sistema"   style="text-align: left; vertical-align: central;">
+                    <ace:menuItem value="#{seguridadBean.entidad.userid}" icon="ui-icon ui-icon-person"/>
+                    <ace:menuItem value="Cambio de clave" icon="ui-icon ui-icon-key" action="#{seguridadBean.cambiar()}"/>
+                    <ace:menuItem action="#{seguridadBean.logout()}" value="Cerrar Sesión" icon="ui-icon ui-icon-power"/>
+                </ace:menuButton>
+            </h:panelGrid> 
+
+        </ui:composition>
+    </body>
+</html>

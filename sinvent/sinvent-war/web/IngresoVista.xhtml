@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+    Document   : LoginVista
+    Created on : 27/08/2011, 07:34:58 PM
+    Author     : edwin
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      >
+    <h:body>
+        <h:form id="form">
+            <ui:composition template="./plantillas/plantillaLogin.xhtml">
+                <ui:define name="content">
+
+                    <ace:dialog 
+                        header="Ingreso"
+                        closable="false"
+                        modal="true"
+                        draggable="true"
+                        showEffect="clip"
+                        hideEffect="fade"
+                        rendered="true"
+                        visible="true"
+                        resizable="false">
+                        <ice:panelGroup>
+
+                            <ice:panelGrid columns="2" width="100%" >
+
+                                <ice:outputLabel value="Usuario:"/>
+                                <ice:inputText value="#{seguridadBean.usr}" style="width: 180px" />
+                                <ice:outputLabel  value="Contraseña:"/>
+                                <ice:inputSecret value="#{seguridadBean.pwd}" style="width: 180px" />
+                            </ice:panelGrid>
+
+                            <ice:panelGrid columns="1" width="100%">
+                                <ace:menuBar autoSubmenuDisplay="true" >
+                                    <ace:menuItem value="Ingresar" icon="ui-icon ui-icon-key"  action="#{seguridadBean.login()}"/>                                   
+                                </ace:menuBar>
+                                <ace:messages/>
+                            </ice:panelGrid>
+                        </ice:panelGroup>
+                    </ace:dialog>
+                    <ace:dialog 
+                        header="Cambio de Clave"
+                        closable="false"
+                        modal="true"
+                        draggable="false"
+                        showEffect="clip"
+                        hideEffect="fade"
+                        rendered="#{seguridadBean.formulario.mostrar}"
+                        visible="#{seguridadBean.formulario.mostrar}">
+                        <ice:panelGroup>
+
+                            <ice:panelGrid columns="2">
+                                <ice:outputLabel  value="Contraseña Anterior:"/>
+                                <ice:inputSecret value="#{seguridadBean.claveAnterior}"/>
+                                <ice:outputLabel  value="Contraseña Nueva:"/>
+                                <ice:inputSecret value="#{seguridadBean.claveNueva}"/>
+                                <ice:outputLabel  value="Contraseña Nueva (Repetir):"/>
+                                <ice:inputSecret value="#{seguridadBean.claveRetpeada}"/>
+                            </ice:panelGrid>
+                            <ace:messages style="color: red;font-style: italic;font-weight: bold"/>
+                            <ice:panelGrid columns="1" width="100%">
+                                <ace:menuBar autoSubmenuDisplay="true" >
+                                    <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk"  action="#{seguridadBean.cambio()}"/>
+                                </ace:menuBar>                                 
+                            </ice:panelGrid>
+                        </ice:panelGroup>
+                    </ace:dialog>
+
+                </ui:define>
+                <!-- Fin -->
+            </ui:composition>
+        </h:form>
+    </h:body>
+</html>
