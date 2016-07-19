@@ -443,4 +443,12 @@ public class CodigosBean implements Serializable {
     public SelectItem[] getComboTipoDatos() {
         return Combos.SelectItems(traer("TDS", null), true);
     }
+    public SelectItem[] getComboUnidadMedida() {
+        return Combos.SelectItems(traer("UM", null), true);
+    }
+   
+    public SelectItem[] getCatProd() {
+        return Combos.SelectItems(traer("CATP", null), true);
+    }
+    
 }
