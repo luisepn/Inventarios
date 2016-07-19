@@ -191,7 +191,7 @@ public abstract class PersonasBean implements Serializable {
                     parametros.put(";orden", "o." + scs[0].getPropertyName()
                             + (scs[0].isAscending() ? " ASC" : " DESC"));
                 }
-                String where = " o.activo=true and o.rol like '%#U%'"; // ( and o.rol  like '%" + rol + "%') 
+                String where = " o.activo=true and o.rol  like '%" + rol + "%'"; // ( and o.rol  like '%" + rol + "%') 
                 for (Map.Entry e : map.entrySet()) {
                     String clave = (String) e.getKey();
                     String valor = (String) e.getValue();
@@ -244,44 +244,7 @@ public abstract class PersonasBean implements Serializable {
             MensajesErrores.advertencia("Apellidos es obligatorio");
             return true;
         }
-        if ((entidad.getEmail() == null) || (entidad.getEmail().isEmpty())) {
-            MensajesErrores.advertencia("email es obligatorio");
-            return true;
-        }
-        if ((entidad.getUserid() == null) || (entidad.getUserid().isEmpty())) {
-            MensajesErrores.advertencia("User ID es obligatorio");
-            return true;
-        }
 
-        if ((entidad.getFecha() == null)) {
-            MensajesErrores.advertencia("Fecha nacimiento obligatorio");
-            return true;
-        }
-        if ((entidad.getFecha().after(new Date()))) {
-            MensajesErrores.advertencia("Fecha nacimiento menor a hoy");
-            return true;
-        }
-
-//        Map parametros = new HashMap();
-//        parametros.put(";where", " o.activo = true and o.userid=:userid");
-//        parametros.put("userid", entidad.getUserid());
-//
-//        try {
-//            List<Entidades> lista = ejbEntidad.encontarParametros(parametros);
-//            if (!lista.isEmpty()) {
-//                if (formulario.isNuevo()) {
-//                    MensajesErrores.advertencia("El User ID digitado ya se encuentra en uso.");
-//                    return true;
-//                }
-//
-//            }
-//        } catch (ConsultarException ex) {
-//            Logger.getLogger(PersonasBean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        if ((getUbicacionBean().getUbicacionSeleccionada() == null)) {
-//            MensajesErrores.advertencia("Ubicación es requerida");
-//            return true;
-//        }
         return false;
     }
 

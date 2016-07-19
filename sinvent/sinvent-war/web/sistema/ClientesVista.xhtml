@@ -11,12 +11,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:icecore="http://www.icefaces.org/icefaces/core"
       xmlns:ace="http://www.icefaces.org/icefaces/components"
-      xmlns:ice="http://www.icesoft.com/icefaces/component"
-      >
-    <h:head>
+      xmlns:ice="http://www.icesoft.com/icefaces/component">
 
-    </h:head>
-    <h:body styleClass="ice-skin-xp">
+    <h:body>
 
         <ui:composition template="../plantillas/plantilla.xhtml">
             <icecore:singleSubmit/>
@@ -25,21 +22,24 @@
                 <ace:panel id="panel"
                            header="#{clientes.perfil.menu.texto}"
                            closable="false"
-                           toggleable="true"       >
+                           toggleable="true"
+                           >
                     <ice:panelGrid columns="7">
+
                         <ace:menuBar autoSubmenuDisplay="true" >
                             <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{clientes.buscar()}"/>
                             <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{clientes.crear()}"/>
                         </ace:menuBar>
                         <ice:outputConnectionStatus/>
+                        <ace:messages/>
                     </ice:panelGrid>
-                    <ace:messages/>
+
                 </ace:panel>
 
                 <ace:panel 
                     header="Resultado Búsqueda"
                     closable="false"
-                    toggleable="true"              >
+                    toggleable="true">
                     <h:panelGrid columns="3" styleClass="centeredPanelGrid">
                         <ice:outputLabel  value="Exportar a:"/>
                         <h:selectOneRadio  value="#{clientes.formulario.pantalla}" required="true">
@@ -57,7 +57,7 @@
                     <h:panelGrid width="100%">
                         <ace:dataTable id="tabla" 
                                        paginatorAlwaysVisible="true"
-                                       value="#{clientes.listaUsuarios}"
+                                       value="#{clientes.entidades}"
                                        var="item"
                                        paginator="true"
                                        lazy="true"
@@ -65,40 +65,38 @@
                                        rowIndexVar="row"
                                        paginatorPosition="both"
                                        rowsPerPageTemplate="5,10,15,30,50,100"
-                                       currentPageReportTemplate="{totalRecords} registro(s) encontrado(s). Página(s): {currentPage} de {totalPages}"
-                                       paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                       rows="30" >
+                                       paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                       rows="30"
+                                       >
                             <ace:column  headerText="Registro" style="text-align: right">
                                 <h:outputText value="#{row+1}"/>
                             </ace:column>
-                            <ace:column headerText="Acciones" style="text-align: left" >
+                            <ace:column headerText="Acciones" style="text-align: left">
                                 <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
                                     <ace:menuItem action="#{clientes.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
                                     <ace:menuItem action="#{clientes.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
                                 </ace:menuButton>
                             </ace:column> 
-                            <ace:column  headerText="Cédula de Identidad" style="text-align: left" filterBy="#{item.pin}" filterMatchMode="contains">
+                            <ace:column  headerText="Cédula de Identidad" sortBy="#{item.pin}" style="text-align: left"
+                                         filterBy="#{item.pin}" filterMatchMode="contains">
                                 <h:outputText  value="#{item.pin}"/>
                             </ace:column>
-                            <ace:column  headerText="Nombres"  style="text-align: left" filterBy="#{item.apellidos}" filterMatchMode="contains">
-                                <h:outputText  value="#{item.toString()}"/>
+                            <ace:column  headerText="Apellidos" sortBy="#{item.apellidos}" style="text-align: left"
+                                         filterBy="#{item.apellidos}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.apellidos}"/>
                             </ace:column>
-
-                            <ace:column  headerText="email"  style="text-align: left" filterBy="#{item.email}" filterMatchMode="contains">
+                            <ace:column  headerText="Nombres" sortBy="#{item.nombres}" style="text-align: left"
+                                         filterBy="#{item.nombres}" filterMatchMode="contains">
+                                <h:outputText  value="#{item.nombres}"/>
+                            </ace:column>
+                            <ace:column  headerText="email" sortBy="#{item.email}" style="text-align: left"
+                                         filterBy="#{item.email}" filterMatchMode="contains">
                                 <h:outputText  value="#{item.email}"/>
                             </ace:column>
 
-                            <ace:column  headerText="Fecha de Nacimiento" sortBy="#{item.fecha}" style="text-align: left" >
-                                <h:outputText  value="#{item.fecha}">
-                                    <f:convertDateTime  parent="dd/MM/yyyy"/>
-                                </h:outputText>
-                            </ace:column>
                         </ace:dataTable>
                     </h:panelGrid>
                 </ace:panel>
-
-
-
                 <ace:dialog 
                     header="#{clientes.perfil.menu.texto}"
                     closable="false"
@@ -108,92 +106,18 @@
                     hideEffect="fade"
                     rendered="#{clientes.formulario.mostrar}"
                     visible="#{clientes.formulario.mostrar}">
-
-
-                    <ace:tabSet  style="width: 100%">          
-
-
-                        <ace:tabPane label="Profesional">
-
+                    <ace:tabSet>
+                        <ace:tabPane>
+                            <f:facet name="label">Inf. General</f:facet>
                             <ice:panelGrid columns="2">
-                                <ice:outputLabel value="C.I.:" for="pin"  />
-                                <ice:selectInputText  listValue="#{clientes.listaUsuarios}" value="#{clientes.apellidos}"
-                                                      listVar="profesor" rows="5" 
-                                                      valueChangeListener="#{clientes.cambiaCedulaEntidad}" width="300px" partialSubmit="true"  disabled="#{clientes.editar==true}">
-                                    <!--                                    <f:facet name="selectInputText">
-                                                                            <ice:panelGrid columnClasses="tipo" columns="3" id="gcolumnas" width="300px" style="background-color: lightgrey;text-align: left">
-                                                                                <ice:outputText value="#{profesor.apellidos}"/>
-                                                                                <ice:outputText value="#{profesor.nombres}"/>
-                                                                                <ice:outputText value="#{profesor.pin}"/>
-                                    
-                                                                            </ice:panelGrid>
-                                                                        </f:facet>-->
-                                    <f:validator  validatorId="com.medical.utilitarios.ValidadorRuc" />
-                                </ice:selectInputText> 
-
-
-                            </ice:panelGrid >
-                            <ace:panel style="border: 0px">
-                                <h:panelGrid columns="2"  rendered="#{clientes.id!=null}">
-                                    <ice:outputLabel value="Nombres:" for="nombresn" />
-                                    <ice:inputText id="nombresn" value="#{clientes.e.nombres}" title="Nombres" disabled="#{clientes.id!=null and clientes.editar==false}" />
-                                    <ice:outputLabel value="Apellidos:" for="apellidosn" />
-                                    <ice:inputText id="apellidosn" value="#{clientes.apellidos}" title="Apellidos" disabled="#{clientes.id!=null and clientes.editar==false}" />
-                                    <ice:outputLabel value="e-mail:" for="emailn" />
-                                    <ice:inputText id="emailn" value="#{clientes.email}" title="Email" disabled="#{clientes.id!=null and clientes.editar==false}" >
-                                        <f:validator  validatorId="com.medical.utilitarios.ValidadorEmail" />
-                                    </ice:inputText>
-                                    <ice:outputLabel value="Userid:" for="useridn" />
-                                    <ice:inputText id="useridn" value="#{clientes.userid}" title="Userid" disabled="#{clientes.id!=null and clientes.editar==false}" />
-                                    <ice:outputLabel value="Fecha de Nacimiento:" />
-                                    <ace:dateTimeEntry navigator="true" id="fechan" value="#{clientes.fecha}" 
-                                                       popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
-                                                       pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield" disabled="#{clientes.id!=null and clientes.editar==false}" >
-                                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                                    </ace:dateTimeEntry>
-                                    <h:outputLabel value="Género:"/>
-                                    <ice:selectOneMenu value="#{clientes.genero}" disabled="#{clientes.id!=null and clientes.editar==false}"  >
-                                        <f:selectItems value="#{tablaDeCodigos.comboGenero}" />
-                                    </ice:selectOneMenu>
-                                </h:panelGrid>
-                                <h:panelGrid id="existe" columns="2"  rendered="#{clientes.id==null }">
-                                    <ice:outputLabel value="Nombres:" for="nombres" />
-                                    <ice:inputText id="nombres" value="#{clientes.nombres}" title="Nombres" />
-                                    <ice:outputLabel value="Apellidos:" for="apellidos" />
-                                    <ice:inputText id="apellidos" value="#{clientes.apellidos}" title="Apellidos" />
-                                    <ice:outputLabel value="e-mail:" for="email" />
-                                    <ice:inputText id="email" value="#{clientes.email}" title="Email" >
-                                        <f:validator  validatorId="com.medical.utilitarios.ValidadorEmail" />
-                                    </ice:inputText>
-                                    <ice:outputLabel value="Userid:" for="userid" />
-                                    <ice:inputText id="userid" value="#{clientes.userid}" title="Userid" />
-                                    <ice:outputLabel value="Fecha de Nacimiento:" />
-                                    <ace:dateTimeEntry navigator="true" id="fecha" value="#{clientes.fecha}" 
-                                                       popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
-                                                       pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
-                                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                                    </ace:dateTimeEntry>
-                                    <h:outputLabel value="Género:"/>
-                                    <ice:selectOneMenu value="#{clientes.genero}">
-                                        <f:selectItems value="#{tablaDeCodigos.comboGenero}" />
-                                    </ice:selectOneMenu>
-                                </h:panelGrid>
-                            </ace:panel>
-                        </ace:tabPane>
-                        <ace:tabPane label="Datos Profesionales">                           
-                            <ice:panelGrid columns="4">
-                                <ice:outputLabel value="Especialidad:" />
-                                <ice:selectOneMenu value="#{clientes.profesional.especialidad}">
-                                    <f:selectItems value="#{tablaDeCodigos.comboEspecialidades}" />
-                                </ice:selectOneMenu>
-                                <ice:outputLabel value="Fecha de Ingreso:" />
-                                <ace:dateTimeEntry navigator="true"  value="#{clientes.profesional.fechaingreso}" 
-                                                   popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
-                                                   pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
-                                </ace:dateTimeEntry>
-                                <ice:outputLabel value="RMS:" for="secundaria" />
-                                <ice:inputText value="#{clientes.profesional.rms}"   ice:inputTexttitle="RMS" />
+                                <ice:outputLabel value="C.I.:" for="pin" />
+                                <ice:inputText id="pin" value="#{clientes.entidad.pin}" title="Pin"/>
+                                <ice:outputLabel value="Nombres:" for="nombres" />
+                                <ice:inputText id="nombres" value="#{clientes.entidad.nombres}" title="Nombres" />
+                                <ice:outputLabel value="Apellidos:" for="apellidos" />
+                                <ice:inputText id="apellidos" value="#{clientes.entidad.apellidos}" title="Apellidos" />
+                                <ice:outputLabel value="e-mail:" for="email" />
+                                <ice:inputText id="email" value="#{clientes.entidad.email}" title="Email" />
                             </ice:panelGrid>
                         </ace:tabPane>
                         <ace:tabPane label="Dirección">                           
@@ -218,21 +142,22 @@
                                 <ice:inputTextarea id="referencia" value="#{clientes.direccion.referencia}" 
                                                    rows="4" cols="20" title="Referencia" />
                             </ice:panelGrid>
-
                         </ace:tabPane>
 
                     </ace:tabSet>
+                    <ice:panelGroup>
 
+                    </ice:panelGroup>
                     <ice:panelGrid columns="1" width="100%">
                         <ace:menuBar autoSubmenuDisplay="true" >
                             <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{clientes.formulario.nuevo}" 
-                                          action="#{clientes.insertarProfesional()}"/>
+                                          action="#{clientes.insertar()}"/>
                             <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
-                                          action="#{clientes.grabarProfesional()}" 
+                                          action="#{clientes.grabar()}" 
                                           rendered="#{clientes.formulario.modificar}" />
-                            <ace:menuItem action="#{clientes.borrarProfesional()}" 
-                                          value="¿Está seguro de Borrar el registro?" 
+                            <ace:menuItem action="#{clientes.borrar()}" 
                                           icon="ui-icon ui-icon-trash" 
+                                          value="Esta seguro de Borrar el registro?" 
                                           rendered="#{clientes.formulario.borrar}"/>
                             <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
                                           action="#{clientes.cancelar()}"/>
@@ -240,6 +165,8 @@
                         <ace:messages />
                     </ice:panelGrid>
                 </ace:dialog>
+
+
 
             </ui:define>
             <!-- Fin -->

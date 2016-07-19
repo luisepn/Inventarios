@@ -31,7 +31,7 @@ public class ClientesBean extends PersonasBean implements Serializable {
     private Formulario formularioClave = new Formulario();
 
     public ClientesBean() {
-        super.setRol("#C"); //Clienetes
+        super.setRol("#C"); //Clientes
     }
 
     public SelectItem[] getComboUsuarios() {
