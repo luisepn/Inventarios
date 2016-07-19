@@ -6,6 +6,7 @@
 package com.inventario.entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,6 +38,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Codigos.findByDescripcion", query = "SELECT c FROM Codigos c WHERE c.descripcion = :descripcion"),
     @NamedQuery(name = "Codigos.findByParametros", query = "SELECT c FROM Codigos c WHERE c.parametros = :parametros")})
 public class Codigos implements Serializable {
+    @OneToMany(mappedBy = "modulo")
+    private List<Grupousuario> grupousuarioList;
+    @OneToMany(mappedBy = "grupo")
+    private List<Grupousuario> grupousuarioList1;
+    @OneToMany(mappedBy = "grupo")
+    private List<Perfil> perfilList;
+    @OneToMany(mappedBy = "unidadMedida")
+    private List<Productos> productosList;
+    @OneToMany(mappedBy = "categoria")
+    private List<Productos> productosList1;
+    @OneToMany(mappedBy = "modulo")
+    private List<Menusistema> menusistemaList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -135,6 +150,60 @@ public class Codigos implements Serializable {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    @XmlTransient
+    public List<Grupousuario> getGrupousuarioList() {
+        return grupousuarioList;
+    }
+
+    public void setGrupousuarioList(List<Grupousuario> grupousuarioList) {
+        this.grupousuarioList = grupousuarioList;
+    }
+
+    @XmlTransient
+    public List<Grupousuario> getGrupousuarioList1() {
+        return grupousuarioList1;
+    }
+
+    public void setGrupousuarioList1(List<Grupousuario> grupousuarioList1) {
+        this.grupousuarioList1 = grupousuarioList1;
+    }
+
+    @XmlTransient
+    public List<Perfil> getPerfilList() {
+        return perfilList;
+    }
+
+    public void setPerfilList(List<Perfil> perfilList) {
+        this.perfilList = perfilList;
+    }
+
+    @XmlTransient
+    public List<Productos> getProductosList() {
+        return productosList;
+    }
+
+    public void setProductosList(List<Productos> productosList) {
+        this.productosList = productosList;
+    }
+
+    @XmlTransient
+    public List<Productos> getProductosList1() {
+        return productosList1;
+    }
+
+    public void setProductosList1(List<Productos> productosList1) {
+        this.productosList1 = productosList1;
+    }
+
+    @XmlTransient
+    public List<Menusistema> getMenusistemaList() {
+        return menusistemaList;
+    }
+
+    public void setMenusistemaList(List<Menusistema> menusistemaList) {
+        this.menusistemaList = menusistemaList;
     }
     
 }
