@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+    Document   : CodigosVista
+    Created on : Sep 20, 2011, 3:41:19 PM
+    Author     : luisfernando
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      >
+    <h:head>
+
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../plantillas/plantilla.xhtml">
+            <icecore:singleSubmit/>
+            <!-- Aqui va todo el codigo de la pagina -->
+            <ui:define name="content">
+                <ace:panel id="panel"
+                           header="#{proveedores.perfil.menu.texto}"
+                           closable="false"
+                           toggleable="true">
+                    <ice:panelGrid columns="7">
+
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{proveedores.buscar()}"/>
+                            <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{proveedores.nuevo()}"/>
+
+                        </ace:menuBar>
+                        <ice:outputResource fileName="Comprobante.pdf" label="Descargar"
+                                            mimeType="application/pdf" resource="#{comprobantes.recursoPdf}" type="button"/>
+                        <ice:outputConnectionStatus/>
+                        <ace:messages/>
+                    </ice:panelGrid>
+
+                </ace:panel>
+
+                <ace:panel 
+                    header="Resultado Búsqueda"
+                    closable="false"
+                    toggleable="true">
+                    <h:panelGrid columns="3" styleClass="centeredPanelGrid">
+                        <ice:outputLabel  value="Exportar a:"/>
+                        <h:selectOneRadio  value="#{proveedores.formulario.pantalla}" required="true">
+                            <f:ajax disabled="false"/>
+                            <f:selectItem itemValue="csv" itemLabel="CSV"/>
+                            <f:selectItem itemValue="pdf" itemLabel="PDF"/>
+                            <f:selectItem itemValue="xls" itemLabel="XLS"/>
+                            <f:selectItem itemValue="xml" itemLabel="XML"/>
+                        </h:selectOneRadio>
+                        <ace:dataExporter id="dataExporter" 
+                                          label="Exportar Archivo" 
+                                          type="#{proveedores.formulario.pantalla}" 
+                                          target="tabla" fileName="datos"/>
+                    </h:panelGrid>
+                    <h:panelGrid width="100%">
+                        <ace:dataTable id="tabla" 
+                                       paginatorAlwaysVisible="true"
+                                       value="#{proveedores.listaProveedores}"
+                                       var="item"
+                                       paginator="true"
+                                       lazy="true"
+                                       resizableColumns="true"
+                                       rowIndexVar="row"
+                                       paginatorPosition="both"
+                                       rowsPerPageTemplate="5,10,15,30,50,100"
+                                       paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                       rows="30" >
+                            <ace:column  headerText="Registro" style="text-align: right">
+                                <h:outputText value="#{row+1}"/>
+                            </ace:column>
+                            <ace:column headerText="Acciones" style="text-align: left">
+                                <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
+                                    <ace:menuItem action="#{proveedores.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                    <ace:menuItem action="#{proveedores.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                </ace:menuButton>
+                            </ace:column> 
+                            <ace:column  headerText="Nombre" style="text-align: left">
+                                <h:outputText  value="#{item.nombre}"/>
+                            </ace:column>
+
+                            <ace:column  headerText="Dirección"  style="text-align: left" >
+                                <h:outputText  value="#{item.direccion}"/>
+                            </ace:column>
+                            <ace:column  headerText="Teléfonos"  style="text-align: left">
+                                <h:outputText  value="#{item.direccion.telefono}  #{item.direccion.movil} " />
+                            </ace:column>     
+                        </ace:dataTable>
+                    </h:panelGrid>
+                </ace:panel>
+
+                <ace:dialog 
+                    header="#{proveedores.perfil.menu.texto}"
+                    closable="false"
+                    modal="true"
+                    draggable="false"
+                    showEffect="clip"
+                    hideEffect="fade"
+                    width="600"
+                    rendered="#{proveedores.formulario.mostrar}"
+                    visible="#{proveedores.formulario.mostrar}">
+                    <ace:tabSet>
+                        <ace:tabPane>
+                            <f:facet name="label">Inf. General</f:facet>
+                            <ice:panelGrid columns="2">
+                                <ice:outputLabel value="Nombre:"  />
+                                <ice:inputText  value="#{proveedores.proveedor.nombre}" title="Nombre"/>  
+                                <ice:outputLabel value="Código:"  />
+                                <ice:inputText  value="#{proveedores.proveedor.codigo}" title="Código"/>  
+                                <ice:outputLabel value="Descripción: "  />
+                                <ice:inputTextarea rows="4" cols="19"  value="#{proveedores.proveedor.codigo}" title="Descripción"/>  
+                                <ice:outputLabel value="Página Web:" />
+                                <ice:inputText value="#{proveedores.proveedor.web}" title="Página Web"/>  
+                                <ice:outputLabel value="RUC:" />
+                                <ice:inputText value="#{proveedores.proveedor.ruc}" title="RUC">
+                                    <f:validator  validatorId="com.inventario.utilitarios.ValidadorRuc" />
+                                </ice:inputText>  
+                            </ice:panelGrid>
+
+
+
+
+
+                        </ace:tabPane>
+                        <ace:tabPane>
+                            <f:facet name="label">Dirección</f:facet>                      
+                            <ice:panelGrid columns="4">
+                                <ice:outputLabel value="Calle Primaria:" />
+                                <ice:inputText   value="#{proveedores.direccion.primaria}" title="Primaria" />
+
+                                <ice:outputLabel value="Número:" />
+                                <ice:inputText  value="#{proveedores.direccion.numero}" title="Numero" />
+
+                                <ice:outputLabel value="Calle Secundaria:" />
+                                <ice:inputText  value="#{proveedores.direccion.secundaria}"  title="Secundaria" />
+
+                                <ice:outputLabel value="Edificio:"/>
+                                <ice:inputText value="#{proveedores.direccion.edificio}"  title="Edificio" />
+
+                                <ice:outputLabel value="Piso / Oficina"/>
+                                <ice:inputText value="#{proveedores.direccion.piso}"  title="Piso / Oficina" />
+
+                                <ice:outputLabel value="Teléfono:" />
+                                <ice:inputText value="#{proveedores.direccion.telefono}" title="Teléfono" />
+
+                                <ice:outputLabel value="Movil:" />
+                                <ice:inputText value="#{proveedores.direccion.movil}" title="Teléfono" />
+
+                                <ice:outputLabel value="Referencia:"/>
+                                <ice:inputTextarea value="#{proveedores.direccion.referencia}" rows="1" cols="20" title="Referencia" />
+
+                                <ice:outputLabel value="Ciudad:" />
+                                <ice:inputText value="#{proveedores.direccion.ciudad}" title="Ciudad" />
+                            </ice:panelGrid>
+                        </ace:tabPane>
+
+
+                    </ace:tabSet>
+                    <ice:panelGrid columns="1" width="100%">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{proveedores.formulario.nuevo}" 
+                                          action="#{proveedores.insertar()}"/>
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                          action="#{proveedores.grabar()}" 
+                                          rendered="#{proveedores.formulario.modificar}" />
+                            <ace:menuItem action="#{proveedores.borrar()}" 
+                                          value="¿Está seguro de Borrar el registro?" 
+                                          icon="ui-icon ui-icon-trash" 
+                                          rendered="#{proveedores.formulario.borrar}"/>
+                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                          action="#{proveedores.cancelar()}"/>
+                        </ace:menuBar>
+                        <ace:messages />
+                    </ice:panelGrid>
+                </ace:dialog>
+
+            </ui:define>
+            <!-- Fin -->
+        </ui:composition>
+
+    </h:body>
+
+</html>
