@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Entity
 @Table(name = "direcciones")
@@ -35,14 +35,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Direcciones.findByPrimaria", query = "SELECT d FROM Direcciones d WHERE d.primaria = :primaria"),
     @NamedQuery(name = "Direcciones.findByNumero", query = "SELECT d FROM Direcciones d WHERE d.numero = :numero"),
     @NamedQuery(name = "Direcciones.findBySecundaria", query = "SELECT d FROM Direcciones d WHERE d.secundaria = :secundaria"),
-    @NamedQuery(name = "Direcciones.findByEdificio", query = "SELECT d FROM Direcciones d WHERE d.edificio = :edificio"),
-    @NamedQuery(name = "Direcciones.findByPiso", query = "SELECT d FROM Direcciones d WHERE d.piso = :piso"),
     @NamedQuery(name = "Direcciones.findByReferencia", query = "SELECT d FROM Direcciones d WHERE d.referencia = :referencia"),
     @NamedQuery(name = "Direcciones.findByTelefono", query = "SELECT d FROM Direcciones d WHERE d.telefono = :telefono"),
     @NamedQuery(name = "Direcciones.findByMovil", query = "SELECT d FROM Direcciones d WHERE d.movil = :movil"),
     @NamedQuery(name = "Direcciones.findByCiudad", query = "SELECT d FROM Direcciones d WHERE d.ciudad = :ciudad")})
 public class Direcciones implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,12 +55,6 @@ public class Direcciones implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "secundaria")
     private String secundaria;
-    @Size(max = 2147483647)
-    @Column(name = "edificio")
-    private String edificio;
-    @Size(max = 2147483647)
-    @Column(name = "piso")
-    private String piso;
     @Size(max = 2147483647)
     @Column(name = "referencia")
     private String referencia;
@@ -120,22 +111,6 @@ public class Direcciones implements Serializable {
 
     public void setSecundaria(String secundaria) {
         this.secundaria = secundaria;
-    }
-
-    public String getEdificio() {
-        return edificio;
-    }
-
-    public void setEdificio(String edificio) {
-        this.edificio = edificio;
-    }
-
-    public String getPiso() {
-        return piso;
-    }
-
-    public void setPiso(String piso) {
-        this.piso = piso;
     }
 
     public String getReferencia() {
@@ -217,7 +192,7 @@ public class Direcciones implements Serializable {
 
     @Override
     public String toString() {
-        return primaria + " " + numero + " y " + secundaria;
+        return primaria + " " + numero + " " + secundaria;
     }
-
+    
 }

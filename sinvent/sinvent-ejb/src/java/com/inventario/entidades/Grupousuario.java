@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Entity
 @Table(name = "grupousuario")
@@ -47,9 +47,6 @@ public class Grupousuario implements Serializable {
     @JoinColumn(name = "grupo", referencedColumnName = "id")
     @ManyToOne
     private Codigos grupo;
-    @JoinColumn(name = "centro", referencedColumnName = "id")
-    @ManyToOne
-    private Centros centro;
 
     public Grupousuario() {
     }
@@ -88,14 +85,6 @@ public class Grupousuario implements Serializable {
 
     public void setGrupo(Codigos grupo) {
         this.grupo = grupo;
-    }
-
-    public Centros getCentro() {
-        return centro;
-    }
-
-    public void setCentro(Centros centro) {
-        this.centro = centro;
     }
 
     @Override

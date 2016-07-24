@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Entity
 @Table(name = "detalle_venta")
@@ -50,9 +50,6 @@ public class DetalleVenta implements Serializable {
     @JoinColumn(name = "producto", referencedColumnName = "id")
     @ManyToOne
     private Productos producto;
-    @JoinColumn(name = "cliente", referencedColumnName = "id")
-    @ManyToOne
-    private Entidades cliente;
 
     public DetalleVenta() {
     }
@@ -99,14 +96,6 @@ public class DetalleVenta implements Serializable {
 
     public void setProducto(Productos producto) {
         this.producto = producto;
-    }
-
-    public Entidades getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Entidades cliente) {
-        this.cliente = cliente;
     }
 
     @Override

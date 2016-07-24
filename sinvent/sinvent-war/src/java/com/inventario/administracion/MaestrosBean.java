@@ -147,9 +147,6 @@ public class MaestrosBean implements Serializable {
             return null;
         }
         maestro = maestros.get(formulario.getFila().getRowIndex());
-        if (maestro.getModulo() == null) {
-            todos = true;
-        }
         formulario.editar();
         return null;
     }
@@ -160,9 +157,6 @@ public class MaestrosBean implements Serializable {
             return null;
         }
         maestro = maestros.get(formulario.getFila().getRowIndex());
-        if (maestro.getModulo() == null) {
-            todos = true;
-        }
         formulario.eliminar();
         return null;
     }
@@ -183,20 +177,6 @@ public class MaestrosBean implements Serializable {
         String where = "o.id is not null";
         try {
             Map parametros = new HashMap();
-            if ((modulo == null) || (modulo.isEmpty())) {
-
-                if (!where.isEmpty()) {
-                    where += " and ";
-                }
-                where += " o.modulo is null ";
-            } else {
-                if (!where.isEmpty()) {
-                    where += " and ";
-                }
-                where += " o.modulo=:modulo ";
-                parametros.put("modulo", modulo);
-            }
-
             if (!(nombre == null || nombre.isEmpty())) {
                 if (!where.isEmpty()) {
                     where += " and ";

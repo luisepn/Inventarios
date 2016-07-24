@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Entity
 @Table(name = "maestros")
@@ -32,8 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Maestros.findAll", query = "SELECT m FROM Maestros m"),
     @NamedQuery(name = "Maestros.findById", query = "SELECT m FROM Maestros m WHERE m.id = :id"),
     @NamedQuery(name = "Maestros.findByCodigo", query = "SELECT m FROM Maestros m WHERE m.codigo = :codigo"),
-    @NamedQuery(name = "Maestros.findByNombre", query = "SELECT m FROM Maestros m WHERE m.nombre = :nombre"),
-    @NamedQuery(name = "Maestros.findByModulo", query = "SELECT m FROM Maestros m WHERE m.modulo = :modulo")})
+    @NamedQuery(name = "Maestros.findByNombre", query = "SELECT m FROM Maestros m WHERE m.nombre = :nombre")})
 public class Maestros implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,9 +46,6 @@ public class Maestros implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 2147483647)
-    @Column(name = "modulo")
-    private String modulo;
     @OneToMany(mappedBy = "maestro")
     private List<Codigos> codigosList;
 
@@ -82,14 +78,6 @@ public class Maestros implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getModulo() {
-        return modulo;
-    }
-
-    public void setModulo(String modulo) {
-        this.modulo = modulo;
     }
 
     @XmlTransient

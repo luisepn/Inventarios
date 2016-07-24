@@ -87,7 +87,6 @@ public class UsuariosGruposBean implements Serializable {
     private SeguridadBean seguridadBean;
     private Grupousuario grupoUsuario;
     private Codigos modulo;
-    private Centros centro;
     private Perfil perfil;
     private Formulario formulario = new Formulario();
 
@@ -131,7 +130,6 @@ public class UsuariosGruposBean implements Serializable {
 
                 List<Entidades> auxent = ejbEntidades.encontarParametros(parametros);
                 for (Entidades ent : auxent) {
-                    centro = null;
                     SelectItem s = new SelectItem(ent, ent.getApellidos());
                     usuarios.add(s);
                 }
@@ -183,10 +181,6 @@ public class UsuariosGruposBean implements Serializable {
         Map parametros = new HashMap();
         String where = "o.usuario=:usuario";
 
-        if (centro != null) {
-            where += " and o.institucion=:institucion";
-            parametros.put("institucion", centro);
-        }
         if (modulo != null) {
             where += " and o.modulo=:modulo";
             parametros.put("modulo", modulo);
@@ -214,9 +208,6 @@ public class UsuariosGruposBean implements Serializable {
         }
         grupoUsuario = new Grupousuario();
         grupoUsuario.setUsuario(usuario.getPin());
-        if (centro != null) {
-            grupoUsuario.setCentro(centro);
-        }
         formulario.insertar();
         return null;
     }
@@ -432,17 +423,4 @@ public class UsuariosGruposBean implements Serializable {
         this.seguridadBean = seguridadBean;
     }
 
-    /**
-     * @return the centro
-     */
-    public Centros getCentro() {
-        return centro;
-    }
-
-    /**
-     * @param centro the centro to set
-     */
-    public void setCentro(Centros centro) {
-        this.centro = centro;
-    }
 }

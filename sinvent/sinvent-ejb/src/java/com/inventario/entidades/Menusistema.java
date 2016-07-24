@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Entity
 @Table(name = "menusistema")

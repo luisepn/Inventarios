@@ -38,18 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Codigos.findByDescripcion", query = "SELECT c FROM Codigos c WHERE c.descripcion = :descripcion"),
     @NamedQuery(name = "Codigos.findByParametros", query = "SELECT c FROM Codigos c WHERE c.parametros = :parametros")})
 public class Codigos implements Serializable {
-    @OneToMany(mappedBy = "modulo")
-    private List<Grupousuario> grupousuarioList;
-    @OneToMany(mappedBy = "grupo")
-    private List<Grupousuario> grupousuarioList1;
-    @OneToMany(mappedBy = "grupo")
-    private List<Perfil> perfilList;
-    @OneToMany(mappedBy = "unidadMedida")
-    private List<Productos> productosList;
-    @OneToMany(mappedBy = "categoria")
-    private List<Productos> productosList1;
-    @OneToMany(mappedBy = "modulo")
-    private List<Menusistema> menusistemaList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,9 +56,21 @@ public class Codigos implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "parametros")
     private String parametros;
+    @OneToMany(mappedBy = "modulo")
+    private List<Grupousuario> grupousuarioList;
+    @OneToMany(mappedBy = "grupo")
+    private List<Grupousuario> grupousuarioList1;
+    @OneToMany(mappedBy = "grupo")
+    private List<Perfil> perfilList;
+    @OneToMany(mappedBy = "unidadMedida")
+    private List<Productos> productosList;
+    @OneToMany(mappedBy = "categoria")
+    private List<Productos> productosList1;
     @JoinColumn(name = "maestro", referencedColumnName = "id")
     @ManyToOne
     private Maestros maestro;
+    @OneToMany(mappedBy = "modulo")
+    private List<Menusistema> menusistemaList;
 
     public Codigos() {
     }
@@ -119,39 +119,6 @@ public class Codigos implements Serializable {
         this.parametros = parametros;
     }
 
-    public Maestros getMaestro() {
-        return maestro;
-    }
-
-    public void setMaestro(Maestros maestro) {
-        this.maestro = maestro;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Codigos)) {
-            return false;
-        }
-        Codigos other = (Codigos) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return nombre;
-    }
-
     @XmlTransient
     public List<Grupousuario> getGrupousuarioList() {
         return grupousuarioList;
@@ -197,6 +164,14 @@ public class Codigos implements Serializable {
         this.productosList1 = productosList1;
     }
 
+    public Maestros getMaestro() {
+        return maestro;
+    }
+
+    public void setMaestro(Maestros maestro) {
+        this.maestro = maestro;
+    }
+
     @XmlTransient
     public List<Menusistema> getMenusistemaList() {
         return menusistemaList;
@@ -204,6 +179,31 @@ public class Codigos implements Serializable {
 
     public void setMenusistemaList(List<Menusistema> menusistemaList) {
         this.menusistemaList = menusistemaList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Codigos)) {
+            return false;
+        }
+        Codigos other = (Codigos) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
     
 }

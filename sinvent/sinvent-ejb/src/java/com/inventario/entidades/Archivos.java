@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author luis
+ * @author limon
  */
 @Entity
 @Table(name = "archivos")
@@ -35,9 +35,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Archivos.findByNombre", query = "SELECT a FROM Archivos a WHERE a.nombre = :nombre"),
     @NamedQuery(name = "Archivos.findByTipo", query = "SELECT a FROM Archivos a WHERE a.tipo = :tipo")})
 public class Archivos implements Serializable {
-    @Lob
-    @Column(name = "archivo")
-    private byte[] archivo;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +47,9 @@ public class Archivos implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "tipo")
     private String tipo;
+    @Lob
+    @Column(name = "archivo")
+    private byte[] archivo;
     @OneToMany(mappedBy = "imagen")
     private List<Productos> productosList;
 
@@ -84,6 +84,13 @@ public class Archivos implements Serializable {
         this.tipo = tipo;
     }
 
+    public byte[] getArchivo() {
+        return archivo;
+    }
+
+    public void setArchivo(byte[] archivo) {
+        this.archivo = archivo;
+    }
 
     @XmlTransient
     public List<Productos> getProductosList() {
@@ -117,14 +124,6 @@ public class Archivos implements Serializable {
     @Override
     public String toString() {
         return "com.inventario.entidades.Archivos[ id=" + id + " ]";
-    }
-
-    public byte[] getArchivo() {
-        return archivo;
-    }
-
-    public void setArchivo(byte[] archivo) {
-        this.archivo = archivo;
     }
     
 }

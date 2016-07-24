@@ -6,7 +6,6 @@
 package com.inventario.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,12 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,8 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Centros.findByLogotipo", query = "SELECT c FROM Centros c WHERE c.logotipo = :logotipo"),
     @NamedQuery(name = "Centros.findByRuc", query = "SELECT c FROM Centros c WHERE c.ruc = :ruc")})
 public class Centros implements Serializable {
-    @OneToMany(mappedBy = "centro")
-    private List<Grupousuario> grupousuarioList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -152,15 +147,6 @@ public class Centros implements Serializable {
     @Override
     public String toString() {
         return nombre;
-    }
-
-    @XmlTransient
-    public List<Grupousuario> getGrupousuarioList() {
-        return grupousuarioList;
-    }
-
-    public void setGrupousuarioList(List<Grupousuario> grupousuarioList) {
-        this.grupousuarioList = grupousuarioList;
     }
     
 }

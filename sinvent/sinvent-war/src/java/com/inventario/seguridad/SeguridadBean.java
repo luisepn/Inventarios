@@ -12,6 +12,7 @@ import com.inventario.entidades.Menusistema;
 import com.inventario.entidades.Perfil;
 import com.inventario.excepciones.ConsultarException;
 import com.inventario.excepciones.GrabarException;
+import com.inventario.servicios.CentrosFacade;
 import com.inventario.servicios.EntidadesFacade;
 import com.inventario.servicios.GrupousuarioFacade;
 import com.inventario.servicios.MenusistemaFacade;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -55,6 +57,16 @@ public class SeguridadBean implements Serializable {
      */
     public SeguridadBean() {
     }
+
+    @PostConstruct
+    private void iniciar() {
+        try {
+            centro = ejbCentros.find(1);
+        } catch (ConsultarException ex) {
+            Logger.getLogger(SeguridadBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private String usr;
     private String pwd;
     private String usrLoggeado;
@@ -83,6 +95,8 @@ public class SeguridadBean implements Serializable {
     private PerfilFacade ejbPerfiles;
     @EJB
     private GrupousuarioFacade ejbGrupos;
+    @EJB
+    private CentrosFacade ejbCentros;
 
     public String login() {
         try {
@@ -119,7 +133,6 @@ public class SeguridadBean implements Serializable {
             List<Grupousuario> aux = ejbGrupos.encontarParametros(parametros);
             if (!aux.isEmpty()) {
                 grupo = aux.get(0);
-                centro = grupo.getCentro();
             } else {
                 MensajesErrores.advertencia("Usuario sin perfil asignado");
                 entidad = null;

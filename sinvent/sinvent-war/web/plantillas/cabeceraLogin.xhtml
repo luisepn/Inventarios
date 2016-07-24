@@ -12,7 +12,7 @@
     <body >
         <ui:composition>
             <h:panelGrid columns="1" width="100%" style="text-align: center;margin-top:25px;">
-                <ice:graphicImage alt="EVM" url="./resources/logo.png" value="./resources/logo.png" height="150"/> 
+                <ice:graphicImage value="#{seguridadBean.centro.logotipo!=null? archivosBean.traerArchivo(seguridadBean.centro.logotipo).archivo:null}" height="150" /> 
             </h:panelGrid>      
         </ui:composition>
     </body>

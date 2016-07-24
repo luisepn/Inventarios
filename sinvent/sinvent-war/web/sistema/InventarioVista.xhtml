@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+    Document   : CodigosVista
+    Created on : Sep 20, 2011, 3:41:19 PM
+    Author     : luisfernando
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      >
+    <h:head>
+
+    </h:head>
+    <h:body styleClass="ice-skin-xp">
+
+        <ui:composition template="../plantillas/plantilla.xhtml">
+            <icecore:singleSubmit/>
+            <!-- Aqui va todo el codigo de la pagina -->
+            <ui:define name="content">
+                <ace:panel id="panel"
+                           header="#{inventario.perfil.menu.texto}"
+                           closable="false"
+                           toggleable="true"       >
+                    <ice:panelGrid columns="7">
+                        <ice:outputLabel value="Producto:" for="prod" />
+                        <ice:selectOneMenu value="#{inventario.producto}" partialSubmit="true">
+                            <f:selectItems value="#{productos.comboMaestro}"/>
+                        </ice:selectOneMenu>
+                    </ice:panelGrid>
+                    <ice:panelGrid columns="2"> 
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{inventario.buscar()}" />
+                            <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{inventario.crear()}" />
+                        </ace:menuBar>
+                        <ice:outputConnectionStatus/>
+                    </ice:panelGrid>
+                    <ace:messages/>
+                </ace:panel>
+
+                <ace:panel 
+                    header="Resultado Búsqueda"
+                    closable="false"
+                    toggleable="true"              >
+                    <h:panelGrid columns="3" styleClass="centeredPanelGrid">
+                        <ice:outputLabel  value="Exportar a:"/>
+                        <h:selectOneRadio  value="#{inventario.formulario.pantalla}" required="true">
+                            <f:ajax disabled="false"/>
+                            <f:selectItem itemValue="csv" itemLabel="CSV"/>
+                            <f:selectItem itemValue="pdf" itemLabel="PDF"/>
+                            <f:selectItem itemValue="xls" itemLabel="XLS"/>
+                            <f:selectItem itemValue="xml" itemLabel="XML"/>
+                        </h:selectOneRadio>
+                        <ace:dataExporter id="dataExporter" 
+                                          label="Exportar Archivo" 
+                                          type="#{inventario.formulario.pantalla}" 
+                                          target="tabla" fileName="datos"/>
+                    </h:panelGrid>
+                    <h:panelGrid width="100%">
+                        <ace:dataTable id="tabla" 
+                                       paginatorAlwaysVisible="true"
+                                       value="#{inventario.listaInventarios}"
+                                       var="item"
+                                       paginator="true"
+                                       lazy="true"
+                                       resizableColumns="true"
+                                       rowIndexVar="row"
+                                       paginatorPosition="both"
+                                       rowsPerPageTemplate="5,10,15,30,50,100"
+                                       currentPageReportTemplate="{totalRecords} Registro(s) encontrado(s). Página(s): {currentPage} de {totalPages}"
+                                       paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                       rows="30" >
+                            <ace:row condition="group" groupBy="#{item.producto.proveedor.toString()}" pos="before" styleClass="grupo">
+                                <ace:column style="text-align: center" colspan="10">
+                                    <h:outputText value="#{item.producto.proveedor.toString()}" />
+                                </ace:column>
+                            </ace:row>
+                            <ace:column  headerText="Registro" style="text-align: right">
+                                <h:outputText value="#{row+1}"/>
+                            </ace:column>
+                            <ace:column headerText="Acciones" style="text-align: left" >
+                                <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
+                                    <ace:menuItem action="#{inventario.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                    <ace:menuItem action="#{inventario.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                </ace:menuButton>
+                            </ace:column> 
+                            <ace:column  headerText="Fecha Ingreso"  style="text-align: left" >
+                                <h:outputText  value="#{item.fecha}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </ace:column>
+                            <ace:column  headerText="Producto"  style="text-align: left" >
+                                <h:outputText  value="#{item.producto.producto.nombre}"/>
+                            </ace:column>
+                            <ace:column  headerText="Cantidad" style="text-align: left" >
+                                <h:outputText  value="#{item.cantidad}"/>
+                            </ace:column>
+                            <ace:column  headerText="Precio Unitario"  style="text-align: left" >
+                                <h:outputText  value="#{item.precioUnitario}">
+                                    <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
+                                </h:outputText>
+                            </ace:column>
+                            <ace:column  headerText="Descripciòn" style="text-align: left" >
+                                <h:outputText  value="#{item.descripcion}"/>
+                            </ace:column>
+                        </ace:dataTable>
+                    </h:panelGrid>
+                </ace:panel>
+
+
+                <ace:dialog 
+                    header="#{inventario.perfil.menu.texto}"                    
+                    closable="false"
+                    modal="true"
+                    draggable="false"
+                    showEffect="clip"
+                    hideEffect="fade"
+                    rendered="#{inventario.formulario.mostrar}"
+                    visible="#{inventario.formulario.mostrar}">
+
+                    <h:panelGrid columns="2"  >
+                        <ice:outputLabel value="Producto:" for="prod" />
+                        <ice:outputText id="prod" value="#{inventario.producto.toString()}" title="Producto" />
+                        <ice:outputLabel value="Proveedor:" for="proveedor" />
+                        <ice:selectOneMenu value="#{inventario.proveedor}" partialSubmit="true">
+                            <f:selectItems value="#{proveedores.comboProveedoresF}"/>
+                        </ice:selectOneMenu>
+                        <ice:outputLabel value="Cantidad:" for="cant" />
+                        <ice:inputText id="cant" value="#{inventario.inventario.cantidad}" title="Cantidad" />
+                        <ice:outputLabel value="Precio Unitario:" for="precuni" />
+                        <ice:inputText id="precuni" value="#{inventario.inventario.precioUnitario}" title="Precio Unitario" />
+                        <ice:outputLabel value="Descripciòn:" for="descp" />
+                        <ice:inputTextarea id="descp" value="#{inventario.inventario.descripcion}" title="Descrpciòn" />
+                    </h:panelGrid>
+                    <ice:panelGrid columns="1" width="100%">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{inventario.formulario.nuevo}" 
+                                          action="#{inventario.insertar()}"/>
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                          action="#{inventario.grabar()}" 
+                                          rendered="#{inventario.formulario.modificar}" />
+                            <ace:menuItem action="#{inventario.borrar()}" 
+                                          value="¿Está seguro de Borrar el registro?" 
+                                          icon="ui-icon ui-icon-trash" 
+                                          rendered="#{inventario.formulario.borrar}"/>
+                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                          action="#{inventario.formulario.cancelar()}"/>
+                        </ace:menuBar>
+                        <ace:messages />
+                    </ice:panelGrid>
+                </ace:dialog>
+            </ui:define>
+            <!-- Fin -->
+        </ui:composition>
+
+    </h:body>
+
+</html>

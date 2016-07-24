@@ -73,13 +73,13 @@
                                        rowsPerPageTemplate="5,10,15,30,50,100"
                                        paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                        rows="30" >
-<!--                            <ace:column  headerText="Registro" style="text-align: right">
-                                <h:outputText value="#{row+1}"/>
-                            </ace:column>-->
+                            <!--                            <ace:column  headerText="Registro" style="text-align: right">
+                                                            <h:outputText value="#{row+1}"/>
+                                                        </ace:column>-->
                             <ace:column headerText="Acciones" style="text-align: left">
                                 <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
                                     <ace:menuItem action="#{centros.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
-                                    <ace:menuItem action="#{centros.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                    <!--<ace:menuItem action="#{centros.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>-->
                                 </ace:menuButton>
                             </ace:column> 
                             <ace:column  headerText="Institución" style="text-align: left">
@@ -136,12 +136,6 @@
 
                                 <ice:outputLabel value="Calle Secundaria:" />
                                 <ice:inputText  value="#{centros.direccion.secundaria}"  title="Secundaria" />
-
-                                <ice:outputLabel value="Edificio:"/>
-                                <ice:inputText value="#{centros.direccion.edificio}"  title="Edificio" />
-
-                                <ice:outputLabel value="Piso / Oficina"/>
-                                <ice:inputText value="#{centros.direccion.piso}"  title="Piso / Oficina" />
 
                                 <ice:outputLabel value="Teléfono:" />
                                 <ice:inputText value="#{centros.direccion.telefono}" title="Teléfono" />

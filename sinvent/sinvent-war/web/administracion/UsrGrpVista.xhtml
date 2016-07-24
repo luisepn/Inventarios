@@ -103,7 +103,7 @@
 
                                 <ace:column headerText="Acciones" style="text-align: left">
                                     <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
-                                        <ace:menuItem action="#{usuarioGrupo.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
+                                        <!--<ace:menuItem action="#{usuarioGrupo.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>-->
                                         <ace:menuItem action="#{usuarioGrupo.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
                                     </ace:menuButton>
                                 </ace:column> 
@@ -115,9 +115,6 @@
                                 </ace:column>
                                 <ace:column  headerText="Grupo" style="text-align: left">
                                     <h:outputText  value="#{item.grupo.nombre}"/>
-                                </ace:column>
-                                <ace:column  headerText="Institución" style="text-align: left">
-                                    <h:outputText  value="#{item.centro.nombre}"/>
                                 </ace:column>
 
                             </ace:dataTable>
@@ -147,12 +144,7 @@
                                     <f:selectItems value="#{tablaDeCodigos.comboGrupoUsuarios}"/>
                                 </ice:selectOneMenu>
                                 <ice:outputLabel value="#{usuarioGrupo.grupoUsuario.grupo.nombre}"  rendered="#{!usuarioGrupo.formulario.nuevo}"/>
-
-
-                                <h:outputLabel value="Institución:" styleClass="bold" />
-                                <ice:selectOneMenu value="#{usuarioGrupo.grupoUsuario.centro}"  partialSubmit="true"  >
-                                    <f:selectItems value="#{centros.comboCentros}" />
-                                </ice:selectOneMenu>
+                             
                             </ice:panelGrid>
                         </ice:panelGroup>
                         <ice:panelGrid columns="1" width="100%">
