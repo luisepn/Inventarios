@@ -7,21 +7,20 @@ package com.inventario.entidades;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,8 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "RegistroVenta.findAll", query = "SELECT r FROM RegistroVenta r"),
     @NamedQuery(name = "RegistroVenta.findById", query = "SELECT r FROM RegistroVenta r WHERE r.id = :id"),
-    @NamedQuery(name = "RegistroVenta.findByFecha", query = "SELECT r FROM RegistroVenta r WHERE r.fecha = :fecha"),
-    @NamedQuery(name = "RegistroVenta.findByCliente", query = "SELECT r FROM RegistroVenta r WHERE r.cliente = :cliente")})
+    @NamedQuery(name = "RegistroVenta.findByFecha", query = "SELECT r FROM RegistroVenta r WHERE r.fecha = :fecha")})
 public class RegistroVenta implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,10 +43,9 @@ public class RegistroVenta implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
-    @Column(name = "cliente")
-    private Integer cliente;
-    @OneToMany(mappedBy = "registroVenta")
-    private List<DetalleVenta> detalleVentaList;
+    @JoinColumn(name = "cliente", referencedColumnName = "id")
+    @ManyToOne
+    private Entidades cliente;
 
     public RegistroVenta() {
     }
@@ -73,21 +70,12 @@ public class RegistroVenta implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getCliente() {
+    public Entidades getCliente() {
         return cliente;
     }
 
-    public void setCliente(Integer cliente) {
+    public void setCliente(Entidades cliente) {
         this.cliente = cliente;
-    }
-
-    @XmlTransient
-    public List<DetalleVenta> getDetalleVentaList() {
-        return detalleVentaList;
-    }
-
-    public void setDetalleVentaList(List<DetalleVenta> detalleVentaList) {
-        this.detalleVentaList = detalleVentaList;
     }
 
     @Override
