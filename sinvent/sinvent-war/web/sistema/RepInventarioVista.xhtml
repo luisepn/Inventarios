@@ -23,32 +23,46 @@
             <!-- Aqui va todo el codigo de la pagina -->
             <ui:define name="content">
                 <ace:panel id="panel"
-                           header="#{inventario.perfil.menu.texto}"
+                           header="#{RepInven.perfil.menu.texto}"
                            closable="false"
                            toggleable="true"       >
-                    <ice:panelGrid columns="7">
+                    <ice:panelGrid columns="8">
+                     <h:outputLabel value="Fecha Desde: " />
+                        <ace:dateTimeEntry navigator="true" value="#{RepInven.desde}" 
+                                               popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
+                                               pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </ace:dateTimeEntry>
+                            <h:outputLabel value="Fecha Hasta: "  />
+                      <ace:dateTimeEntry navigator="true" value="#{RepInven.hasta}" 
+                                               popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
+                                               pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                      </ace:dateTimeEntry>
                         <ice:outputLabel value="Producto:" for="prod" />
-                        <ice:selectOneMenu value="#{inventario.producto}" partialSubmit="true">
-                            <f:selectItems value="#{productos.comboProductos}"/>
+                        <ice:selectOneMenu value="#{RepInven.producto}" partialSubmit="true">
+                            <f:selectItems value="#{productos.comboMaestro}"/>
+                        </ice:selectOneMenu>
+                            <ice:outputLabel value="Proveedor:" for="prov" />
+                        <ice:selectOneMenu value="#{RepInven.proveedor}" partialSubmit="true">
+                            <f:selectItems value="#{proveedores.comboProveedores}"/>
                         </ice:selectOneMenu>
                     </ice:panelGrid>
                     <ice:panelGrid columns="2"> 
                         <ace:menuBar autoSubmenuDisplay="true" >
-                            <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{inventario.buscar()}" />
-                            <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{inventario.crear()}" />
+                            <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{RepInven.buscar()}" />
                         </ace:menuBar>
                         <ice:outputConnectionStatus/>
                     </ice:panelGrid>
                     <ace:messages/>
                 </ace:panel>
-
                 <ace:panel 
                     header="Resultado Búsqueda"
                     closable="false"
                     toggleable="true"              >
                     <h:panelGrid columns="3" styleClass="centeredPanelGrid">
                         <ice:outputLabel  value="Exportar a:"/>
-                        <h:selectOneRadio  value="#{inventario.formulario.pantalla}" required="true">
+                        <h:selectOneRadio  value="#{RepInven.formulario.pantalla}" required="true">
                             <f:ajax disabled="false"/>
                             <f:selectItem itemValue="csv" itemLabel="CSV"/>
                             <f:selectItem itemValue="pdf" itemLabel="PDF"/>
@@ -57,13 +71,13 @@
                         </h:selectOneRadio>
                         <ace:dataExporter id="dataExporter" 
                                           label="Exportar Archivo" 
-                                          type="#{inventario.formulario.pantalla}" 
+                                          type="#{RepInven.formulario.pantalla}" 
                                           target="tabla" fileName="datos"/>
                     </h:panelGrid>
                     <h:panelGrid width="100%">
                         <ace:dataTable id="tabla" 
                                        paginatorAlwaysVisible="true"
-                                       value="#{inventario.listaInventarios}"
+                                       value="#{RepInven.listaInventarios}"
                                        var="item"
                                        paginator="true"
                                        lazy="true"
@@ -74,27 +88,30 @@
                                        currentPageReportTemplate="{totalRecords} Registro(s) encontrado(s). Página(s): {currentPage} de {totalPages}"
                                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                        rows="30" >
-                            <ace:row condition="group" groupBy="#{item.proveedor.toString()}" pos="before" styleClass="grupo">
+                            <ace:row condition="group" groupBy="#{item.producto.proveedor.toString()}" pos="before" styleClass="grupo">
                                 <ace:column style="text-align: center" colspan="10">
-                                    <h:outputText value="#{item.proveedor.toString()}" />
+                                    <h:outputText value="#{item.producto.proveedor.toString()}" />
                                 </ace:column>
                             </ace:row>
                             <ace:column  headerText="Registro" style="text-align: right">
                                 <h:outputText value="#{row+1}"/>
                             </ace:column>
-                            <ace:column headerText="Acciones" style="text-align: left" >
+<!--                            <ace:column headerText="Acciones" style="text-align: left" >
                                 <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
-                                    <ace:menuItem action="#{inventario.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
-                                    <ace:menuItem action="#{inventario.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
+                                    <ace:menuItem action="#{RepInven.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
                                 </ace:menuButton>
-                            </ace:column> 
-                            <ace:column  headerText="Fecha Ingreso"  style="text-align: left" >
+                            </ace:column> -->
+                            <ace:column  headerText="Fecha y Hora"  style="text-align: left" >
                                 <h:outputText  value="#{item.fecha}">
                                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                                 </h:outputText>
                             </ace:column>
                             <ace:column  headerText="Producto"  style="text-align: left" >
-                                <h:outputText  value="#{item.producto.nombre}"/>
+                                <h:outputText  value="#{item.producto.producto.nombre}"/>
+                            </ace:column>
+                            <ace:column  headerText="Movimiento"  style="text-align: left" >
+                                <h:outputText  value="Entrada" rendered="#{item.entrada eq true}"/>
+                                <h:outputText  value="Salida" rendered="#{item.entrada eq false}"/>
                             </ace:column>
                             <ace:column  headerText="Cantidad" style="text-align: left" >
                                 <h:outputText  value="#{item.cantidad}"/>
@@ -104,54 +121,10 @@
                                     <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
                                 </h:outputText>
                             </ace:column>
-                            <ace:column  headerText="Descripción" style="text-align: left" >
-                                <h:outputText  value="#{item.descripcion}"/>
-                            </ace:column>
                         </ace:dataTable>
                     </h:panelGrid>
                 </ace:panel>
-
-
-                <ace:dialog 
-                    header="#{inventario.perfil.menu.texto}"                    
-                    closable="false"
-                    modal="true"
-                    draggable="false"
-                    showEffect="clip"
-                    hideEffect="fade"
-                    rendered="#{inventario.formulario.mostrar}"
-                    visible="#{inventario.formulario.mostrar}">
-                    <h:panelGrid columns="2"  >
-                        <ice:outputLabel value="Producto:" for="prod" />
-                        <ice:outputText id="prod" value="#{inventario.producto.toString()}" title="Producto" />
-                        <ice:outputLabel value="Proveedor:" for="proveedor" />
-                        <ice:selectOneMenu value="#{inventario.inventario.proveedor}" partialSubmit="true">
-                            <f:selectItems value="#{proveedores.comboProveedoresF}"/>
-                        </ice:selectOneMenu>
-                        <ice:outputLabel value="Cantidad:" for="cant" />
-                        <ice:inputText id="cant" value="#{inventario.inventario.cantidad}" title="Cantidad" />
-                        <ice:outputLabel value="Precio Unitario:" for="precuni" />
-                        <ice:inputText id="precuni" value="#{inventario.inventario.precioUnitario}" title="Precio Unitario" />
-                        <ice:outputLabel value="Descripción:" for="descp" />
-                        <ice:inputTextarea id="descp" value="#{inventario.inventario.descripcion}" title="Descrpciòn" />
-                    </h:panelGrid>
-                    <ice:panelGrid columns="1" width="100%">
-                        <ace:menuBar autoSubmenuDisplay="true" >
-                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{inventario.formulario.nuevo}" 
-                                          action="#{inventario.insertar()}"/>
-                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
-                                          action="#{inventario.grabar()}" 
-                                          rendered="#{inventario.formulario.modificar}" />
-                            <ace:menuItem action="#{inventario.borrar()}" 
-                                          value="¿Está seguro de Borrar el registro?" 
-                                          icon="ui-icon ui-icon-trash" 
-                                          rendered="#{inventario.formulario.borrar}"/>
-                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
-                                          action="#{inventario.formulario.cancelar()}"/>
-                        </ace:menuBar>
-                        <ace:messages />
-                    </ice:panelGrid>
-                </ace:dialog>
+        
             </ui:define>
             <!-- Fin -->
         </ui:composition>
