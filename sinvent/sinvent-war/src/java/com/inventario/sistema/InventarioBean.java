@@ -16,6 +16,7 @@ import com.inventario.excepciones.GrabarException;
 import com.inventario.excepciones.InsertarException;
 import com.inventario.seguridad.SeguridadBean;
 import com.inventario.servicios.InventarioFacade;
+import com.inventario.servicios.ProductosFacade;
 import com.inventario.servicios.ProductoxproveedorFacade;
 import com.inventario.utilitarios.Formulario;
 import com.inventario.utilitarios.MensajesErrores;
@@ -54,7 +55,6 @@ public class InventarioBean implements Serializable {
     private Formulario formulario = new Formulario();
     private LazyDataModel<Inventario> listaInventarios;
     private Inventario inventario;
-    private Proveedores proveedor;
     private Productos producto;
     private Productoxproveedor prodxprov;
     private Perfil perfil;
@@ -63,6 +63,8 @@ public class InventarioBean implements Serializable {
     private InventarioFacade ejbInventario;
     @EJB
     private ProductoxproveedorFacade ejbProdxprov;
+    @EJB
+    private ProductosFacade ejbProductos;
 
     @PostConstruct
     private void activar() {
@@ -112,7 +114,7 @@ public class InventarioBean implements Serializable {
             orden += " o." + scs[0].getPropertyName() + (scs[0].isAscending() ? " ASC" : " DESC");
         }
         parametros.put(";orden", orden);
-        String where = "o.id is not null";
+        String where = "o.entrada = true";
 
         for (Map.Entry e : map.entrySet()) {
             String clave = (String) e.getKey();
@@ -121,9 +123,9 @@ public class InventarioBean implements Serializable {
             where += " and upper(o." + clave + ") like :valor";
             parametros.put("valor", valor.toUpperCase() + "%");
         }
-        
-        if (producto!=null) {
-            where +=" and o.producto.producto=:producto";
+
+        if (producto != null) {
+            where += " and o.producto=:producto";
             parametros.put("producto", producto);
         }
 
@@ -154,9 +156,7 @@ public class InventarioBean implements Serializable {
             return ejbInventario.encontarParametros(parametros);
         } catch (ConsultarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
-            Logger
-                    .getLogger(InventarioBean.class
-                            .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventarioBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return null;
@@ -190,22 +190,21 @@ public class InventarioBean implements Serializable {
         inventario.setPrecioUnitario(BigDecimal.ZERO);
         inventario.setFecha(new Date());
         inventario.setEntrada(Boolean.TRUE);
+        inventario.setDescripcion("Ingreso realizado por " + seguridadBean.getEntidad().toString());
         formulario.insertar();
         return null;
     }
 
     public String modificar() {
         inventario = (Inventario) getListaInventarios().getRowData();
-        proveedor = inventario.getProducto().getProveedor();
-        producto = inventario.getProducto().getProducto();
+        producto = inventario.getProducto();
         formulario.editar();
         return null;
     }
 
     public String eliminar() {
         inventario = (Inventario) getListaInventarios().getRowData();
-        proveedor = inventario.getProducto().getProveedor();
-        producto = inventario.getProducto().getProducto();
+        producto = inventario.getProducto();
         formulario.eliminar();
         return null;
     }
@@ -223,7 +222,7 @@ public class InventarioBean implements Serializable {
             MensajesErrores.advertencia("Descripcion es necesaria");
             return true;
         }
-        if (proveedor == null) {
+        if (inventario.getProveedor() == null) {
             MensajesErrores.advertencia("Proveedor es necesario");
             return true;
         }
@@ -242,16 +241,19 @@ public class InventarioBean implements Serializable {
         }
         try {
 
-            if (ControlProdXProv(producto, proveedor)) {
+            if (ControlProdXProv(producto, inventario.getProveedor())) {
                 prodxprov = new Productoxproveedor();
-                prodxprov.setProveedor(proveedor);
+                prodxprov.setProveedor(inventario.getProveedor());
                 prodxprov.setProducto(producto);
                 ejbProdxprov.create(prodxprov, getSeguridadBean().getEntidad().getUserid());
             }
 
-            inventario.setProducto(prodxprov);
+            inventario.setProducto(producto);
+            inventario.setProveedor(inventario.getProveedor());
             ejbInventario.create(inventario, getSeguridadBean().getEntidad().getUserid());
-        } catch (InsertarException | ConsultarException ex) {
+            producto.setStock(producto.getStock() + inventario.getCantidad());
+            ejbProductos.edit(producto, getSeguridadBean().getEntidad().getUserid());
+        } catch (InsertarException | ConsultarException | GrabarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
             Logger.getLogger(InventarioBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -269,14 +271,16 @@ public class InventarioBean implements Serializable {
             return null;
         }
         try {
-            if (ControlProdXProv(producto, proveedor)) {
+            if (ControlProdXProv(producto, inventario.getProveedor())) {
                 prodxprov = new Productoxproveedor();
-                prodxprov.setProveedor(proveedor);
+                prodxprov.setProveedor(inventario.getProveedor());
                 prodxprov.setProducto(producto);
                 ejbProdxprov.create(prodxprov, getSeguridadBean().getEntidad().getUserid());
             }
-            
+
             ejbInventario.edit(inventario, getSeguridadBean().getEntidad().getUserid());
+//            producto.setStock(producto.getStock() + inventario.getCantidad());
+//            ejbProductos.edit(producto, getSeguridadBean().getEntidad().getUserid());
         } catch (GrabarException | ConsultarException | InsertarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
             Logger.getLogger(InventarioBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -292,9 +296,9 @@ public class InventarioBean implements Serializable {
             return null;
         }
         try {
-            if (ControlProdXProv(producto, proveedor)) {
+            if (ControlProdXProv(producto, inventario.getProveedor())) {
                 prodxprov = new Productoxproveedor();
-                prodxprov.setProveedor(proveedor);
+                prodxprov.setProveedor(inventario.getProveedor());
                 prodxprov.setProducto(producto);
                 ejbProdxprov.remove(prodxprov, getSeguridadBean().getEntidad().getUserid());
             }
@@ -370,20 +374,6 @@ public class InventarioBean implements Serializable {
      */
     public void setListaInventarios(LazyDataModel<Inventario> listaInventarios) {
         this.listaInventarios = listaInventarios;
-    }
-
-    /**
-     * @return the proveedor
-     */
-    public Proveedores getProveedor() {
-        return proveedor;
-    }
-
-    /**
-     * @param proveedor the proveedor to set
-     */
-    public void setProveedor(Proveedores proveedor) {
-        this.proveedor = proveedor;
     }
 
     /**

@@ -82,8 +82,10 @@ public class Entidades implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "rol")
     private String rol;
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "vendedor")
     private List<RegistroVenta> registroVentaList;
+    @OneToMany(mappedBy = "cliente")
+    private List<RegistroVenta> registroVentaList1;
     @JoinColumn(name = "direccion", referencedColumnName = "id")
     @OneToOne
     private Direcciones direccion;
@@ -187,6 +189,15 @@ public class Entidades implements Serializable {
 
     public void setRegistroVentaList(List<RegistroVenta> registroVentaList) {
         this.registroVentaList = registroVentaList;
+    }
+
+    @XmlTransient
+    public List<RegistroVenta> getRegistroVentaList1() {
+        return registroVentaList1;
+    }
+
+    public void setRegistroVentaList1(List<RegistroVenta> registroVentaList1) {
+        this.registroVentaList1 = registroVentaList1;
     }
 
     public Direcciones getDireccion() {

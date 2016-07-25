@@ -43,9 +43,9 @@ public class CatProdBean implements Serializable {
      * Creates a new instance of CodigosBean
      */
     public CatProdBean() {
-        
+
     }
-    
+
     @ManagedProperty(value = "#{seguridadBean}")
     private SeguridadBean seguridadBean;
     private Formulario formulario = new Formulario();
@@ -59,7 +59,6 @@ public class CatProdBean implements Serializable {
     private CodigosFacade ejbCodigos;
     @EJB
     private MaestrosFacade ejbMaestro;
-
 
     @PostConstruct
     private void activar() {
@@ -75,7 +74,7 @@ public class CatProdBean implements Serializable {
             MensajesErrores.fatal("Sin perfil válido");
             seguridadBean.cerraSession();
         }
-        
+
         perfil = seguridadBean.traerPerfil((String) params.get("p"));
 
         if (this.perfil == null) {
@@ -88,7 +87,7 @@ public class CatProdBean implements Serializable {
                 MensajesErrores.fatal("Sin perfil válido, grupo invalido");
                 seguridadBean.cerraSession();
             }
-        }     
+        }
     }
 
     /**
@@ -140,18 +139,14 @@ public class CatProdBean implements Serializable {
             MensajesErrores.advertencia("No tiene autorización para crear un registro");
             return null;
         }
-//        if (maestroEntidad == null) {
-//            MensajesErrores.advertencia("Seleccione una tabla maestra primero");
-//            return null;
-//        }
-          try {
-            maestroEntidad=ejbMaestro.find(4);
+        try {
+            maestroEntidad = ejbMaestro.find(4);
         } catch (ConsultarException ex) {
             Logger.getLogger(CatProdBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         codigo = new Codigos();
         setCodigoMaestro(getMaestroEntidad().getCodigo());
-    
+
         codigo.setMaestro(maestroEntidad);
 //        
 
@@ -187,32 +182,17 @@ public class CatProdBean implements Serializable {
     // buscar
 
     public String buscar() {
-//        if ((codigoMaestro == null) || (codigoMaestro.isEmpty())) {
-//            MensajesErrores.advertencia("Seleccione una tabla maestra primero");
-//            return null;
-//        }
-//        try {
-//
-//            maestroEntidad = ejbCodigos.traerMaestroCodigo(codigoMaestro,Combos.getModuloStr());
-//        } catch (ConsultarException ex) {
-//            MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
-//            Logger.getLogger(CodigosBean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         if (!perfil.getConsulta()) {
             MensajesErrores.advertencia("No tiene autorización para consultar");
             return null;
         }
-//        if (getMaestroEntidad() == null) {
-//            MensajesErrores.advertencia("Seleccione una tabla maestra primero");
-//            return null;
-//        }
-        
-          try {
-            maestroEntidad=ejbMaestro.find(4);
+
+        try {
+            maestroEntidad = ejbMaestro.find(4);
         } catch (ConsultarException ex) {
             Logger.getLogger(CatProdBean.class.getName()).log(Level.SEVERE, null, ex);
-        }    
-        
+        }
+
         try {
             Map parametros = new HashMap();
             parametros.put(";where", "o.maestro=:maestroParametro");
@@ -348,24 +328,6 @@ public class CatProdBean implements Serializable {
         this.maestroEntidad = maestroEntidad;
     }
 
-//    public static SelectItem[] getSelectItems(List<Codigos> entities, boolean selectOne) {
-//        if (entities == null) {
-//            return null;
-//        }
-//        int size = selectOne ? entities.size() + 1 : entities.size();
-//        SelectItem[] items = new SelectItem[size];
-//        int i = 0;
-//        if (selectOne) {
-//            items[0] = new SelectItem(null, "---");
-//            i++;
-//        }
-//        for (Codigos x : entities) {
-//            items[i++] = new SelectItem(x.getCodigo(), x.toString());
-//        }
-//        return items;
-//    }
-
-
     /**
      * @return the perfil
      */
@@ -394,6 +356,4 @@ public class CatProdBean implements Serializable {
         this.seguridadBean = seguridadBean;
     }
 
-
-    
 }

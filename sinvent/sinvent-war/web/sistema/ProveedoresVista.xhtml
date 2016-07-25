@@ -81,8 +81,14 @@
                                     <ace:menuItem action="#{proveedores.eliminar()}" value="Borrar" icon="ui-icon ui-icon-trash"/>
                                 </ace:menuButton>
                             </ace:column> 
+                            <ace:column  headerText="Código" style="text-align: left">
+                                <h:outputText  value="#{item.codigo}"/>
+                            </ace:column>
                             <ace:column  headerText="Nombre" style="text-align: left">
                                 <h:outputText  value="#{item.nombre}"/>
+                            </ace:column>
+                            <ace:column  headerText="Descripción" style="text-align: left">
+                                <h:outputText  value="#{item.descripcion}"/>
                             </ace:column>
 
                             <ace:column  headerText="Dirección"  style="text-align: left" >
@@ -114,7 +120,7 @@
                                 <ice:outputLabel value="Código:"  />
                                 <ice:inputText  value="#{proveedores.proveedor.codigo}" title="Código"/>  
                                 <ice:outputLabel value="Descripción: "  />
-                                <ice:inputTextarea rows="4" cols="19"  value="#{proveedores.proveedor.codigo}" title="Descripción"/>  
+                                <ice:inputTextarea rows="4" cols="19"  value="#{proveedores.proveedor.descripcion}" title="Descripción"/>  
                                 <ice:outputLabel value="Página Web:" />
                                 <ice:inputText value="#{proveedores.proveedor.web}" title="Página Web"/>  
                                 <ice:outputLabel value="RUC:" />

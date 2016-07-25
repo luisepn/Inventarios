@@ -43,6 +43,9 @@ public class RegistroVenta implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+    @JoinColumn(name = "vendedor", referencedColumnName = "id")
+    @ManyToOne
+    private Entidades vendedor;
     @JoinColumn(name = "cliente", referencedColumnName = "id")
     @ManyToOne
     private Entidades cliente;
@@ -68,6 +71,14 @@ public class RegistroVenta implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public Entidades getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Entidades vendedor) {
+        this.vendedor = vendedor;
     }
 
     public Entidades getCliente() {

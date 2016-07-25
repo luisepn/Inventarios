@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -52,20 +51,19 @@ public class ProductosBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    
     /**
      * Creates a new instance of MaestrosBean
      */
     public ProductosBean() {
-        
-         productoslista = new LazyDataModel<Productos>() {
+
+        productoslista = new LazyDataModel<Productos>() {
             @Override
             public List<Productos> load(int i, int i1, SortCriteria[] scs, Map<String, String> map) {
                 //
                 return null;
             }
         };
-        
+
     }
 
     @PostConstruct
@@ -105,9 +103,8 @@ public class ProductosBean implements Serializable {
     private Productos producto;
     private String modulo;
     private String nombre;
-   private Archivos logo;
+    private Archivos logo;
     private Codigos categoria;
-    private boolean todos;
     private Perfil perfil;
     @EJB
     private ProductosFacade ejbProducto;
@@ -128,8 +125,6 @@ public class ProductosBean implements Serializable {
         this.formulario = formulario;
     }
 
-
-
     // colocamos los metodos en verbo
     public String crear() {
         // se deberia chequear perfil?
@@ -137,7 +132,7 @@ public class ProductosBean implements Serializable {
             MensajesErrores.advertencia("No tiene autorización para crear un registro");
         }
         setProducto(new Productos());
-        logo= new Archivos();
+        logo = new Archivos();
 
         formulario.insertar();
         return null;
@@ -149,8 +144,8 @@ public class ProductosBean implements Serializable {
             return null;
         }
         setProducto((Productos) getProductoslista().getRowData());
-   
-         if (producto.getImagen() != null) {
+
+        if (producto.getImagen() != null) {
             this.logo = traerArchivo(producto.getImagen().getId());
         } else {
             logo = new Archivos();
@@ -176,14 +171,12 @@ public class ProductosBean implements Serializable {
     }
     // buscar
 
-    
-    
-     public String buscar() {
+    public String buscar() {
         if (!perfil.getConsulta()) {
             MensajesErrores.advertencia("No tiene autorización para consultar");
             return null;
         }
-        
+
         setProductoslista(new LazyDataModel<Productos>() {
             @Override
             public List<Productos> load(int i, int pageSize, SortCriteria[] scs, Map<String, String> map) {
@@ -201,19 +194,17 @@ public class ProductosBean implements Serializable {
                     where += " and upper(o." + clave + ") like :" + clave;
                     parametros.put(clave, valor.toUpperCase() + "%");
                 }
-                
-                 if (!((nombre == null) || (nombre.isEmpty()))) {
-                        where += " and lower(o.nombre) like :nombre";
-                         parametros.put("nombre", "%" + nombre.toLowerCase() + "%");//Problemas con la tilde en mayusculas
-               }
-                
-                if(categoria!=null){
-                   where += " and o.categoria=:ciclo";
-                   parametros.put("ciclo", categoria);
+
+                if (!((nombre == null) || (nombre.isEmpty()))) {
+                    where += " and lower(o.nombre) like :nombre";
+                    parametros.put("nombre", "%" + nombre.toLowerCase() + "%");//Problemas con la tilde en mayusculas
                 }
-                
-                
-                
+
+                if (categoria != null) {
+                    where += " and o.categoria=:ciclo";
+                    parametros.put("ciclo", categoria);
+                }
+
                 int total = 0;
                 try {
                     parametros.put(";where", where);
@@ -242,14 +233,13 @@ public class ProductosBean implements Serializable {
     }
 
     // acciones de base de datos
-
     private boolean validar() {
         if ((getProducto().getCodigo() == null) || (getProducto().getCodigo().isEmpty())) {
             MensajesErrores.advertencia("Es necesario código");
             return true;
         }
-        
-      if ((getProducto().getNombre() == null) || (getProducto().getNombre().isEmpty())) {
+
+        if ((getProducto().getNombre() == null) || (getProducto().getNombre().isEmpty())) {
             MensajesErrores.advertencia("Es necesario nombre");
             return true;
         }
@@ -257,23 +247,17 @@ public class ProductosBean implements Serializable {
             MensajesErrores.advertencia("Es necesario precio");
             return true;
         }
-       
+
         if ((getProducto().getUnidadMedida() == null)) {
             MensajesErrores.advertencia("Es necesario unidad de medida");
             return true;
         }
-        
+
         if ((getProducto().getCategoria() == null)) {
             MensajesErrores.advertencia("Es necesario categoria");
             return true;
         }
-        
-        
-//        if (todos) {
-//            maestro.setMudulo(null);
-//        } else {
-//            maestro.setMudulo(Combos.getModuloStr());
-//        }
+
         return false;
     }
 
@@ -287,11 +271,11 @@ public class ProductosBean implements Serializable {
         }
         try {
             producto.setActivo(true);
-          
+
             ejbArchivos.create(logo, seguridadBean.getEntidad().getUserid());
             producto.setImagen(logo);
             ejbProducto.create(getProducto(), seguridadBean.getEntidad().getUserid());
-    
+
         } catch (InsertarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
             Logger.getLogger(ProductosBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -309,12 +293,12 @@ public class ProductosBean implements Serializable {
             return null;
         }
         try {
-           if (logo.getId() == null) {
+            if (logo.getId() == null) {
                 ejbArchivos.create(logo, seguridadBean.getEntidad().getUserid());
                 producto.setImagen(logo);
             } else {
                 ejbArchivos.edit(logo, seguridadBean.getEntidad().getUserid());
-                 producto.setImagen(logo);
+                producto.setImagen(logo);
             }
             ejbProducto.edit(getProducto(), seguridadBean.getEntidad().getUserid());
         } catch (GrabarException | InsertarException ex) {
@@ -347,21 +331,20 @@ public class ProductosBean implements Serializable {
         return ejbProducto.find(id);
     }
 
-    public SelectItem[] getComboMaestro() {
-        List<Productos> productosli= new LinkedList<>();
+    public SelectItem[] getComboProductos() {
         try {
             Map parametros = new HashMap();
             parametros.put(";orden", "o.nombre");
-             productosli= ejbProducto.encontarParametros(parametros);
-            return Combos.SelectItems(productosli, false);
+            parametros.put(";where", " o.activo = true");
+            return Combos.SelectItems(ejbProducto.encontarParametros(parametros), true);
         } catch (ConsultarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
             Logger.getLogger(ProductosBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
-     private Archivos traerArchivo(Integer id) {
+
+    private Archivos traerArchivo(Integer id) {
         try {
             return ejbArchivos.find(id);
         } catch (ConsultarException ex) {
@@ -370,7 +353,7 @@ public class ProductosBean implements Serializable {
         return null;
     }
 
-   public String logoListener(FileEntryEvent e) {
+    public String archivoListener(FileEntryEvent e) {
         FileEntry fe = (FileEntry) e.getComponent();
         FileEntryResults results = fe.getResults();
 
@@ -386,20 +369,6 @@ public class ProductosBean implements Serializable {
             }
         }
         return null;
-    }
-    
-    /**
-     * @return the todos
-     */
-    public boolean isTodos() {
-        return todos;
-    }
-
-    /**
-     * @param todos the todos to set
-     */
-    public void setTodos(boolean todos) {
-        this.todos = todos;
     }
 
     /**
@@ -513,6 +482,5 @@ public class ProductosBean implements Serializable {
     public void setCategoria(Codigos categoria) {
         this.categoria = categoria;
     }
-
 
 }

@@ -80,10 +80,8 @@ public class SeguridadBean implements Serializable {
     private String claveRetpeada;
     private String claveAnterior;
 
-    private List<Centros> listaCentros;
-
-    private Entidades paciente;
-    private List pacientes;
+    private Entidades cliente;
+    private List clientes;
     private String claveBusqueda;
 
     @EJB
@@ -287,7 +285,7 @@ public class SeguridadBean implements Serializable {
     }
 
     public void cambiaEntidades(ValueChangeEvent event) {
-        paciente = null;
+        cliente = null;
         if (event.getComponent() instanceof SelectInputText) {
             // get the number of displayable records from the component
             SelectInputText autoComplete
@@ -296,25 +294,25 @@ public class SeguridadBean implements Serializable {
             String newWord = (String) event.getNewValue();
             // traer la consulta
             Map parametros = new HashMap();
-            String where = " o.activo=true   and  (upper(o.entidad.apellidos) like :pin or upper(o.entidad.pin) like :pin) and o.centro=:centro";
+            String where = " o.activo=true and o.rol like :rol  and  (upper(o.apellidos) like :pin or upper(o.pin) like :pin)";
+            parametros.put("rol", "%#C%");
             parametros.put("pin", "%" + newWord.toUpperCase() + "%");
-            parametros.put("centro", centro);
             parametros.put(";where", where);
-            parametros.put(";orden", " o.entidad.apellidos");
+            parametros.put(";orden", " o.apellidos");
             int total = ((SelectInputText) event.getComponent()).getRows();
             // Contadores
 
             parametros.put(";inicial", 0);
             parametros.put(";final", total);
 
-            pacientes = new ArrayList();
+            clientes = new ArrayList();
 
             try {
 
                 List<Entidades> aux = ejbEntidades.encontarParametros(parametros);
                 for (Entidades p : aux) {
                     SelectItem s = new SelectItem(p, p.toString());
-                    pacientes.add(s);
+                    clientes.add(s);
                 }
 
             } catch (ConsultarException ex) {
@@ -323,18 +321,18 @@ public class SeguridadBean implements Serializable {
             }
 
             if (autoComplete.getSelectedItem() != null) {
-                paciente = (Entidades) autoComplete.getSelectedItem().getValue();
+                cliente = (Entidades) autoComplete.getSelectedItem().getValue();
             } else {
 
                 Entidades tmp = null;
-                for (int i = 0, max = pacientes.size(); i < max; i++) {
-                    SelectItem e = (SelectItem) pacientes.get(i);
+                for (int i = 0, max = getClientes().size(); i < max; i++) {
+                    SelectItem e = (SelectItem) getClientes().get(i);
                     if (e.getLabel().compareToIgnoreCase(newWord) == 0) {
                         tmp = (Entidades) e.getValue();
                     }
                 }
                 if (tmp != null) {
-                    paciente = tmp;
+                    cliente = tmp;
                 }
             }
 
@@ -518,45 +516,31 @@ public class SeguridadBean implements Serializable {
     }
 
     /**
-     * @return the listaCentros
+     * @return the cliente
      */
-    public List<Centros> getListaCentros() {
-        return listaCentros;
+    public Entidades getCliente() {
+        return cliente;
     }
 
     /**
-     * @param listaCentros the listaCentros to set
+     * @param cliente the cliente to set
      */
-    public void setListaCentros(List<Centros> listaCentros) {
-        this.listaCentros = listaCentros;
+    public void setCliente(Entidades cliente) {
+        this.cliente = cliente;
     }
 
     /**
-     * @return the paciente
+     * @return the clientes
      */
-    public Entidades getPaciente() {
-        return paciente;
+    public List getClientes() {
+        return clientes;
     }
 
     /**
-     * @param paciente the paciente to set
+     * @param clientes the clientes to set
      */
-    public void setPaciente(Entidades paciente) {
-        this.paciente = paciente;
-    }
-
-    /**
-     * @return the pacientes
-     */
-    public List getEntidades() {
-        return pacientes;
-    }
-
-    /**
-     * @param pacientes the pacientes to set
-     */
-    public void setEntidades(List pacientes) {
-        this.pacientes = pacientes;
+    public void setClientes(List clientes) {
+        this.clientes = clientes;
     }
 
     /**

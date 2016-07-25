@@ -59,9 +59,12 @@ public class Inventario implements Serializable {
     private BigDecimal precioUnitario;
     @Column(name = "cantidad")
     private Integer cantidad;
+    @JoinColumn(name = "proveedor", referencedColumnName = "id")
+    @ManyToOne
+    private Proveedores proveedor;
     @JoinColumn(name = "producto", referencedColumnName = "id")
     @ManyToOne
-    private Productoxproveedor producto;
+    private Productos producto;
 
     public Inventario() {
     }
@@ -118,11 +121,19 @@ public class Inventario implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Productoxproveedor getProducto() {
+    public Proveedores getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Proveedores proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public Productos getProducto() {
         return producto;
     }
 
-    public void setProducto(Productoxproveedor producto) {
+    public void setProducto(Productos producto) {
         this.producto = producto;
     }
 

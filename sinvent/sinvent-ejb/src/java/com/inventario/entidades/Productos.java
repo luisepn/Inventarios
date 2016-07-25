@@ -63,6 +63,8 @@ public class Productos implements Serializable {
     private List<Productoxproveedor> productoxproveedorList;
     @OneToMany(mappedBy = "producto")
     private List<DetalleVenta> detalleVentaList;
+    @OneToMany(mappedBy = "producto")
+    private List<Inventario> inventarioList;
     @JoinColumn(name = "unidad_medida", referencedColumnName = "id")
     @ManyToOne
     private Codigos unidadMedida;
@@ -144,6 +146,15 @@ public class Productos implements Serializable {
 
     public void setDetalleVentaList(List<DetalleVenta> detalleVentaList) {
         this.detalleVentaList = detalleVentaList;
+    }
+
+    @XmlTransient
+    public List<Inventario> getInventarioList() {
+        return inventarioList;
+    }
+
+    public void setInventarioList(List<Inventario> inventarioList) {
+        this.inventarioList = inventarioList;
     }
 
     public Codigos getUnidadMedida() {

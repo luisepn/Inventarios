@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!--
     Document   : PrincipalVista
-    Created on : 28/08/2011, 11:31:00 AM
+    Created on : 24/07/2016, 19:30:00 PM
     Author     : luisfernando
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -12,14 +12,14 @@
 
 
     <ice:panelGrid columns="2">
-        <ice:outputLabel value="Paciente:"  styleClass="bold"/>
-        <ice:selectInputText  listValue="#{seguridadBean.pacientes}" value="#{seguridadBean.claveBusqueda}"
-                              listVar="paciente" rows="5" 
-                              valueChangeListener="#{seguridadBean.cambiaPacientes}" width="400px"  title="Apellidos o C.I. del paciente">
+        <ice:outputLabel value="Cliente:"  styleClass="bold"/>
+        <ice:selectInputText  listValue="#{seguridadBean.clientes}" value="#{seguridadBean.claveBusqueda}"
+                              listVar="cliente" rows="5" 
+                              valueChangeListener="#{seguridadBean.cambiaEntidades}" width="400px"  title="Apellidos o C.I. del cliente">
             <f:facet name="selectInputText">
                 <ice:panelGrid columnClasses="tipo" columns="2" id="gcolumnas" width="400px" style="background-color: lightgrey;text-align: left">
-                    <ice:outputText value="#{paciente.toString()}"/>
-                    <ice:outputText value="#{paciente.entidad.pin}"/>
+                    <ice:outputText value="#{cliente.toString()}"/>
+                    <ice:outputText value="#{cliente.pin}"/>
                 </ice:panelGrid>
             </f:facet>
             <f:ajax render="nombreidca"/>
@@ -27,14 +27,14 @@
             <f:ajax render="emailidca"/>
         </ice:selectInputText>
     </ice:panelGrid>
-    <ace:panel rendered="#{seguridadBean.paciente!=null}">
+    <ace:panel rendered="#{seguridadBean.cliente!=null}">
         <ice:panelGrid columns="4" >
             <ice:outputLabel value="Nombres:" for="nombreidca" styleClass="bold" />
-            <ice:outputLabel id="nombreidca" value="#{seguridadBean.paciente.entidad.nombres}" />
+            <ice:outputLabel id="nombreidca" value="#{seguridadBean.cliente.nombres}" />
             <ice:outputLabel value="Apellidos:" for="apellidosidca" styleClass="bold" />
-            <ice:outputLabel id="apellidosidca" value="#{seguridadBean.paciente.entidad.apellidos}"  />
+            <ice:outputLabel id="apellidosidca" value="#{seguridadBean.cliente.apellidos}"  />
             <ice:outputLabel value="C.I.:" for="emailidca" styleClass="bold"  />
-            <ice:outputLabel id="emailidca" value="#{seguridadBean.paciente.entidad.pin}"/>
+            <ice:outputLabel id="emailidca" value="#{seguridadBean.cliente.pin}"/>
         </ice:panelGrid>
     </ace:panel>
 

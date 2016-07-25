@@ -6,7 +6,6 @@
 package com.inventario.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,10 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -45,8 +42,6 @@ public class Productoxproveedor implements Serializable {
     @JoinColumn(name = "producto", referencedColumnName = "id")
     @ManyToOne
     private Productos producto;
-    @OneToMany(mappedBy = "producto")
-    private List<Inventario> inventarioList;
 
     public Productoxproveedor() {
     }
@@ -77,15 +72,6 @@ public class Productoxproveedor implements Serializable {
 
     public void setProducto(Productos producto) {
         this.producto = producto;
-    }
-
-    @XmlTransient
-    public List<Inventario> getInventarioList() {
-        return inventarioList;
-    }
-
-    public void setInventarioList(List<Inventario> inventarioList) {
-        this.inventarioList = inventarioList;
     }
 
     @Override

@@ -27,23 +27,23 @@
                            closable="false"
                            toggleable="true"       >
                     <ice:panelGrid columns="8">
-                     <h:outputLabel value="Fecha Desde: " />
+                        <h:outputLabel value="Fecha Desde: " />
                         <ace:dateTimeEntry navigator="true" value="#{RepInven.desde}" 
-                                               popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
-                                               pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                            </ace:dateTimeEntry>
-                            <h:outputLabel value="Fecha Hasta: "  />
-                      <ace:dateTimeEntry navigator="true" value="#{RepInven.hasta}" 
-                                               popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
-                                               pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                      </ace:dateTimeEntry>
+                                           popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
+                                           pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </ace:dateTimeEntry>
+                        <h:outputLabel value="Fecha Hasta: "  />
+                        <ace:dateTimeEntry navigator="true" value="#{RepInven.hasta}" 
+                                           popupIcon="ui-icon ui-icon-calendar" renderAsPopup="true" 
+                                           pattern="dd/MM/yyyy" label="dd/MM/yyyy" labelPosition="infield">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </ace:dateTimeEntry>
                         <ice:outputLabel value="Producto:" for="prod" />
                         <ice:selectOneMenu value="#{RepInven.producto}" partialSubmit="true">
-                            <f:selectItems value="#{productos.comboMaestro}"/>
+                            <f:selectItems value="#{productos.comboProductos}"/>
                         </ice:selectOneMenu>
-                            <ice:outputLabel value="Proveedor:" for="prov" />
+                        <ice:outputLabel value="Proveedor:" for="prov" />
                         <ice:selectOneMenu value="#{RepInven.proveedor}" partialSubmit="true">
                             <f:selectItems value="#{proveedores.comboProveedores}"/>
                         </ice:selectOneMenu>
@@ -88,26 +88,24 @@
                                        currentPageReportTemplate="{totalRecords} Registro(s) encontrado(s). Página(s): {currentPage} de {totalPages}"
                                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                        rows="30" >
-                            <ace:row condition="group" groupBy="#{item.producto.proveedor.toString()}" pos="before" styleClass="grupo">
-                                <ace:column style="text-align: center" colspan="10">
-                                    <h:outputText value="#{item.producto.proveedor.toString()}" />
-                                </ace:column>
-                            </ace:row>
+
                             <ace:column  headerText="Registro" style="text-align: right">
                                 <h:outputText value="#{row+1}"/>
                             </ace:column>
-<!--                            <ace:column headerText="Acciones" style="text-align: left" >
-                                <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
-                                    <ace:menuItem action="#{RepInven.modificar()}" value="Editar" icon="ui-icon ui-icon-pencil"/>
-                                </ace:menuButton>
-                            </ace:column> -->
+
                             <ace:column  headerText="Fecha y Hora"  style="text-align: left" >
                                 <h:outputText  value="#{item.fecha}">
                                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                                 </h:outputText>
                             </ace:column>
                             <ace:column  headerText="Producto"  style="text-align: left" >
-                                <h:outputText  value="#{item.producto.producto.nombre}"/>
+                                <h:outputText  value="#{item.producto.nombre}"/>
+                            </ace:column>
+                            <ace:column  headerText="Proveedor"  style="text-align: left" >
+                                <h:outputText value="#{item.proveedor.toString()}" />
+                            </ace:column>
+                            <ace:column  headerText="Descripción" style="text-align: left" >
+                                <h:outputText  value="#{item.descripcion}"/>
                             </ace:column>
                             <ace:column  headerText="Movimiento"  style="text-align: left" >
                                 <h:outputText  value="Entrada" rendered="#{item.entrada eq true}"/>
@@ -115,7 +113,7 @@
                             </ace:column>
                             <ace:column  headerText="Cantidad" style="text-align: left" >
                                 <h:outputText  value="#{item.cantidad}"/>
-                            </ace:column>
+                            </ace:column>                            
                             <ace:column  headerText="Precio Unitario"  style="text-align: left" >
                                 <h:outputText  value="#{item.precioUnitario}">
                                     <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
@@ -124,7 +122,7 @@
                         </ace:dataTable>
                     </h:panelGrid>
                 </ace:panel>
-        
+
             </ui:define>
             <!-- Fin -->
         </ui:composition>

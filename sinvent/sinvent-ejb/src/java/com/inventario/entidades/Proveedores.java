@@ -65,6 +65,8 @@ public class Proveedores implements Serializable {
     private Boolean activo;
     @OneToMany(mappedBy = "proveedor")
     private List<Productoxproveedor> productoxproveedorList;
+    @OneToMany(mappedBy = "proveedor")
+    private List<Inventario> inventarioList;
     @JoinColumn(name = "direccion", referencedColumnName = "id")
     @ManyToOne
     private Direcciones direccion;
@@ -139,6 +141,15 @@ public class Proveedores implements Serializable {
 
     public void setProductoxproveedorList(List<Productoxproveedor> productoxproveedorList) {
         this.productoxproveedorList = productoxproveedorList;
+    }
+
+    @XmlTransient
+    public List<Inventario> getInventarioList() {
+        return inventarioList;
+    }
+
+    public void setInventarioList(List<Inventario> inventarioList) {
+        this.inventarioList = inventarioList;
     }
 
     public Direcciones getDireccion() {

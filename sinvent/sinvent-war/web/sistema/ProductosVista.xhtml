@@ -27,15 +27,15 @@
                            closable="false"
                            toggleable="true"       >
                     <ice:panelGrid columns="7">
-                         <ice:outputLabel value="Nombre" for="nom" />
-                         <ice:inputText id="nombre" value="#{productos.nombre}" title="Nom" />
-                         <ice:outputLabel value="Categoria:" for="cate" />
-                     <ice:selectOneMenu value="#{productos.categoria}" partialSubmit="true">
-                                   <f:selectItems value="#{tablaDeCodigos.catProd}"/>
-                      </ice:selectOneMenu>
-                      </ice:panelGrid>
-                    
-                      <ice:panelGrid columns="2"> 
+                        <ice:outputLabel value="Nombre" for="nom" />
+                        <ice:inputText id="nombre" value="#{productos.nombre}" title="Nom" />
+                        <ice:outputLabel value="Categoria:" for="cate" />
+                        <ice:selectOneMenu value="#{productos.categoria}" partialSubmit="true">
+                            <f:selectItems value="#{tablaDeCodigos.categoriaProductos}"/>
+                        </ice:selectOneMenu>
+                    </ice:panelGrid>
+
+                    <ice:panelGrid columns="2"> 
                         <ace:menuBar autoSubmenuDisplay="true" >
                             <ace:menuItem value="Buscar" icon="ui-icon ui-icon-search"  action="#{productos.buscar()}"/>
                             <ace:menuItem value="Nuevo" icon="ui-icon ui-icon-document" action="#{productos.crear()}"/>
@@ -89,32 +89,26 @@
                             <ace:column  headerText="Código" style="text-align: left" >
                                 <h:outputText  value="#{item.codigo}"/>
                             </ace:column>
-                           <ace:column  headerText="Categoría"  style="text-align: left" >
-                                  <h:outputText  value="#{item.categoria.nombre}"/>
+                            <ace:column  headerText="Categoría"  style="text-align: left" >
+                                <h:outputText  value="#{item.categoria.nombre}"/>
                             </ace:column>
                             <ace:column  headerText="Nombre" style="text-align: left" >
                                 <h:outputText  value="#{item.nombre}"/>
                             </ace:column>
-                             <ace:column  headerText="Imagen" >
-                                 <ice:graphicImage value="#{archivosBean.traerArchivo(item.imagen.id).archivo}" id="resourceGraphicImage" style="height: 50px " />
+                            <ace:column  headerText="Imagen" >
+                                <ice:graphicImage value="#{archivosBean.traerArchivo(item.imagen.id).archivo}" id="resourceGraphicImage" style="height: 50px " />
                             </ace:column>
                             <ace:column  headerText="Unidad de Médida "  style="text-align: left" >
                                 <h:outputText  value="#{item.unidadMedida.nombre}"/>
                             </ace:column>
                             <ace:column  headerText="Precio"  style="text-align: left" >
                                 <h:outputText  value="#{item.precio}">
-                                <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
+                                    <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
                                 </h:outputText>
                             </ace:column>
                             <ace:column  headerText="Stock"  style="text-align: left" >
-                                 <h:outputText  value="#{item.stock}"/>
-<!--                                <h:outputText  value="#{item.stock}">
-                                    <f:convertDateTime  parent="dd/MM/yyyy"/>
-                                </h:outputText>-->
+                                <h:outputText  value="#{item.stock}"/>
                             </ace:column>
-<!--                            <ace:column  headerText="Activo" style="text-align: left" >
-                                  <h:outputText  value="#{item.activo eq true? 'SI': 'NO'}"/>
-                            </ace:column>-->
                         </ace:dataTable>
                     </h:panelGrid>
                 </ace:panel>
@@ -128,31 +122,28 @@
                     rendered="#{productos.formulario.mostrar}"
                     visible="#{productos.formulario.mostrar}">
                     <ace:tabSet>
-                     <ace:tabPane>
+                        <ace:tabPane>
                             <f:facet name="label">Inf. General</f:facet>
-                                <h:panelGrid columns="2"  >
-                                    <ice:outputLabel value="Cod:" for="nombresn" />
-                                    <ice:inputText id="nombresn" value="#{productos.producto.codigo}" title="Codigo" />
-                                    <ice:outputLabel value="Nombre:" for="nombresn1" />
-                                    <ice:inputText id="nombresn1" value="#{productos.producto.nombre}" title="Nombre" />
-                                     <ice:outputLabel value="Precio:" for="prec" />
-                                     <ice:inputText id="prec" value="#{productos.producto.precio}" title="Precio" />
-                                    <ice:outputLabel value="Unidad Medidad:" for="apellidosn" />
-                                    <ice:selectOneMenu value="#{productos.producto.unidadMedida}" partialSubmit="true">
-                                       <f:selectItems value="#{tablaDeCodigos.comboUnidadMedida}"/>
-                                    </ice:selectOneMenu>
-                                    
-                                    <ice:outputLabel value="Categoria:" for="cate" />
-                                    <ice:selectOneMenu value="#{productos.producto.categoria}" partialSubmit="true">
-                                   <f:selectItems value="#{tablaDeCodigos.catProd}"/>
-                                    </ice:selectOneMenu>
-                                     <ice:outputLabel value="Stock:" for="stock" />
-                                     <ice:inputText id="stock" value="#{productos.producto.stock}" title="Stock" />
-                                </h:panelGrid>
-                      </ace:tabPane>
-                       <ace:tabPane>
+                            <h:panelGrid columns="2"  >
+                                <ice:outputLabel value="Código:" for="nombresn" />
+                                <ice:inputText id="nombresn" value="#{productos.producto.codigo}" title="Código" />
+                                <ice:outputLabel value="Nombre:" for="nombresn1" />
+                                <ice:inputText id="nombresn1" value="#{productos.producto.nombre}" title="Nombre" />
+                                <ice:outputLabel value="Precio:" for="prec" />
+                                <ice:inputText id="prec" value="#{productos.producto.precio}" title="Precio" />
+                                <ice:outputLabel value="Unidad Medidad:" for="apellidosn" />
+                                <ice:selectOneMenu value="#{productos.producto.unidadMedida}" partialSubmit="true">
+                                    <f:selectItems value="#{tablaDeCodigos.comboUnidadMedida}"/>
+                                </ice:selectOneMenu>                                    
+                                <ice:outputLabel value="Categoria:" for="cate" />
+                                <ice:selectOneMenu value="#{productos.producto.categoria}" partialSubmit="true">
+                                    <f:selectItems value="#{tablaDeCodigos.categoriaProductos}"/>
+                                </ice:selectOneMenu>
+                            </h:panelGrid>
+                        </ace:tabPane>
+                        <ace:tabPane>
                             <f:facet name="label">Imagen</f:facet>   
-                           <center>
+                            <center>
                                 <ice:graphicImage value="#{productos.logo.archivo}" id="resourceGraphicImage" style="height: 100px "  rendered="#{productos.logo.archivo!=null}"/>
                             </center>
                             <center>
@@ -163,7 +154,7 @@
                                         maxFileCount="1"
                                         label="Subido con éxito"
                                         maxFileCountMessage="Sólo se puede subir 1 archivo"
-                                        fileEntryListener="#{productos.logoListener}"
+                                        fileEntryListener="#{productos.archivoListener}"
                                         maxFileSize="10485760"
                                         maxFileSizeMessage="El archivo supera el tamaño predefinido 10 MB"                                                                                                                 
                                         useOriginalFilename="true"
@@ -171,24 +162,24 @@
                                     <h:commandButton  type="submit" value="Subir Archivo" />
                                 </ice:panelGrid>
                             </center>
-                      </ace:tabPane>
-                 </ace:tabSet>
-                            <ice:panelGrid columns="1" width="100%">
-                                <ace:menuBar autoSubmenuDisplay="true" >
-                                    <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{productos.formulario.nuevo}" 
-                                                  action="#{productos.insertar()}"/>
-                                    <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
-                                                  action="#{productos.grabar()}" 
-                                                  rendered="#{productos.formulario.modificar}" />
-                                    <ace:menuItem action="#{productos.borrar()}" 
-                                                  value="¿Está seguro de Borrar el registro?" 
-                                                  icon="ui-icon ui-icon-trash" 
-                                                  rendered="#{productos.formulario.borrar}"/>
-                                    <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
-                                                  action="#{productos.cancelar()}"/>
-                                </ace:menuBar>
-                                <ace:messages />
-                            </ice:panelGrid>
+                        </ace:tabPane>
+                    </ace:tabSet>
+                    <ice:panelGrid columns="1" width="100%">
+                        <ace:menuBar autoSubmenuDisplay="true" >
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" rendered="#{productos.formulario.nuevo}" 
+                                          action="#{productos.insertar()}"/>
+                            <ace:menuItem value="Grabar" icon="ui-icon ui-icon-disk" 
+                                          action="#{productos.grabar()}" 
+                                          rendered="#{productos.formulario.modificar}" />
+                            <ace:menuItem action="#{productos.borrar()}" 
+                                          value="¿Está seguro de Borrar el registro?" 
+                                          icon="ui-icon ui-icon-trash" 
+                                          rendered="#{productos.formulario.borrar}"/>
+                            <ace:menuItem value="Salir" icon="ui-icon ui-icon-close" 
+                                          action="#{productos.cancelar()}"/>
+                        </ace:menuBar>
+                        <ace:messages />
+                    </ice:panelGrid>
                 </ace:dialog>
 
             </ui:define>

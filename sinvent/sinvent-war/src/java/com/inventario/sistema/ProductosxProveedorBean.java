@@ -5,20 +5,16 @@
  */
 package com.inventario.sistema;
 
-import com.inventario.entidades.Inventario;
 import com.inventario.entidades.Perfil;
 import com.inventario.entidades.Productos;
 import com.inventario.entidades.Productoxproveedor;
 import com.inventario.entidades.Proveedores;
 import com.inventario.excepciones.ConsultarException;
 import com.inventario.seguridad.SeguridadBean;
-import com.inventario.servicios.InventarioFacade;
 import com.inventario.servicios.ProductoxproveedorFacade;
 import com.inventario.utilitarios.Formulario;
 import com.inventario.utilitarios.MensajesErrores;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,29 +33,23 @@ import org.icefaces.ace.model.table.SortCriteria;
  *
  * @author edison
  */
-@ManagedBean(name = "RepInven")
+@ManagedBean(name = "productosxProveedor")
 @ViewScoped
-public class ReporInventarioBean implements Serializable {
+public class ProductosxProveedorBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
-     * Creates a new instance of InventarioBean
+     * Creates a new instance of ProductosxProveedorBean
      */
     @ManagedProperty(value = "#{seguridadBean}")
     private SeguridadBean seguridadBean;
-    private Date desde = new Date();
-    private Date hasta = new Date();
     private Formulario formulario = new Formulario();
-    private LazyDataModel<Inventario> listaInventarios;
-    private Inventario inventario;
-    private Proveedores proveedor;
+    private LazyDataModel<Productoxproveedor> listaProdxProve;
     private Productos producto;
-    private Productoxproveedor prodxprov;
+    private Proveedores proveedor;
     private Perfil perfil;
-    private final Calendar fecha = Calendar.getInstance();
+    private Productoxproveedor prodxprov;
 
-    @EJB
-    private InventarioFacade ejbInventario;
     @EJB
     private ProductoxproveedorFacade ejbProdxprov;
 
@@ -72,7 +62,7 @@ public class ReporInventarioBean implements Serializable {
         }
 
         String p = (String) params.get("p");
-        String nombreForma = "RepInventarioVista";
+        String nombreForma = "ReporteProveedorProductoVista";
 
         if (p == null) {
             MensajesErrores.fatal("Sin perfil válido");
@@ -93,20 +83,20 @@ public class ReporInventarioBean implements Serializable {
         }
     }
 
-    public ReporInventarioBean() {
-        listaInventarios = new LazyDataModel<Inventario>() {
+    public ProductosxProveedorBean() {
+        listaProdxProve = new LazyDataModel<Productoxproveedor>() {
             @Override
-            public List<Inventario> load(int i, int i1, SortCriteria[] scs, Map<String, String> map) {
-                return null;
+            public List<Productoxproveedor> load(int i, int i1, SortCriteria[] scs, Map<String, String> map) {
+                return carga(i, i1, scs, map);
             }
         };
     }
 
-    public List<Inventario> carga(int i, int pageSize, SortCriteria[] scs, Map<String, String> map) {
+    public List<Productoxproveedor> carga(int i, int pageSize, SortCriteria[] scs, Map<String, String> map) {
         Map parametros = new HashMap();
         String orden = "";
         if (scs.length == 0) {
-            orden = "o.fecha asc";
+            orden = "o.id asc";
         } else {
             orden += " o." + scs[0].getPropertyName() + (scs[0].isAscending() ? " ASC" : " DESC");
         }
@@ -131,21 +121,16 @@ public class ReporInventarioBean implements Serializable {
             parametros.put("proveedor", proveedor);
         }
 
-        if (desde != null && hasta != null) {
-            where += " and o.fecha between :desde and :hasta ";
-            parametros.put("desde", desde);
-            parametros.put("hasta", hasta);
-        }
-
         parametros.put(";where", where);
 
         int total = 0;
 
         try {
-            total = ejbInventario.contar(parametros);
+            total = ejbProdxprov.contar(parametros);
         } catch (ConsultarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
-            Logger.getLogger(ReporInventarioBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+                    .getLogger(ProductosxProveedorBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         int endIndex = i + pageSize;
@@ -156,54 +141,37 @@ public class ReporInventarioBean implements Serializable {
 
         parametros.put(";inicial", i);
         parametros.put(";final", endIndex);
-        listaInventarios.setRowCount(total);
+        listaProdxProve.setRowCount(total);
 
         try {
-            return ejbInventario.encontarParametros(parametros);
+            return ejbProdxprov.encontarParametros(parametros);
         } catch (ConsultarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
-            Logger.getLogger(ReporInventarioBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventarioBean.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return null;
     }
 
     public String buscar() {
-
-        if (desde == null) {
-            desde = new Date();
-        }
-        if (hasta == null) {
-            hasta = new Date();
-        }
-
-        if (desde.after(hasta)) {
-            MensajesErrores.advertencia("Fecha Desde no Puede Ser Mayor que Fecha Hasta");
-            listaInventarios.setRowCount(0);
-            return null;
-        }
-
-        fecha.setTime(desde);
-        fecha.set(Calendar.HOUR_OF_DAY, 00);
-        fecha.set(Calendar.MINUTE, 00);
-        desde = fecha.getTime();
-
-        fecha.setTime(hasta);
-        fecha.set(Calendar.HOUR_OF_DAY, 23);
-        fecha.set(Calendar.MINUTE, 59);
-        hasta = fecha.getTime();
-
-        listaInventarios = new LazyDataModel<Inventario>() {
+        listaProdxProve = new LazyDataModel<Productoxproveedor>() {
 
             @Override
-            public List<Inventario> load(int i, int i1, SortCriteria[] scs, Map<String, String> map) {
+            public List<Productoxproveedor> load(int i, int i1, SortCriteria[] scs, Map<String, String> map) {
                 return carga(i, i1, scs, map);
             }
         };
-
+        return null;
+    }
+    
+    public String detalle() {
+        prodxprov = (Productoxproveedor) getListaProdxProve().getRowData();
+        proveedor = prodxprov.getProveedor();
+        producto = prodxprov.getProducto();
+        formulario.editar();
         return null;
     }
 
+    
     /**
      * @return the seguridadBean
      */
@@ -233,31 +201,17 @@ public class ReporInventarioBean implements Serializable {
     }
 
     /**
-     * @return the listaInventarios
+     * @return the listaProdxProve
      */
-    public LazyDataModel<Inventario> getListaInventarios() {
-        return listaInventarios;
+    public LazyDataModel<Productoxproveedor> getListaProdxProve() {
+        return listaProdxProve;
     }
 
     /**
-     * @param listaInventarios the listaInventarios to set
+     * @param listaProdxProve the listaProdxProve to set
      */
-    public void setListaInventarios(LazyDataModel<Inventario> listaInventarios) {
-        this.listaInventarios = listaInventarios;
-    }
-
-    /**
-     * @return the proveedor
-     */
-    public Proveedores getProveedor() {
-        return proveedor;
-    }
-
-    /**
-     * @param proveedor the proveedor to set
-     */
-    public void setProveedor(Proveedores proveedor) {
-        this.proveedor = proveedor;
+    public void setListaProdxProve(LazyDataModel<Productoxproveedor> listaProdxProve) {
+        this.listaProdxProve = listaProdxProve;
     }
 
     /**
@@ -275,17 +229,17 @@ public class ReporInventarioBean implements Serializable {
     }
 
     /**
-     * @return the prodxprov
+     * @return the proveedor
      */
-    public Productoxproveedor getProdxprov() {
-        return prodxprov;
+    public Proveedores getProveedor() {
+        return proveedor;
     }
 
     /**
-     * @param prodxprov the prodxprov to set
+     * @param proveedor the proveedor to set
      */
-    public void setProdxprov(Productoxproveedor prodxprov) {
-        this.prodxprov = prodxprov;
+    public void setProveedor(Proveedores proveedor) {
+        this.proveedor = proveedor;
     }
 
     /**
@@ -303,45 +257,17 @@ public class ReporInventarioBean implements Serializable {
     }
 
     /**
-     * @return the inventario
+     * @return the prodxprov
      */
-    public Inventario getInventario() {
-        return inventario;
+    public Productoxproveedor getProdxprov() {
+        return prodxprov;
     }
 
     /**
-     * @param inventario the inventario to set
+     * @param prodxprov the prodxprov to set
      */
-    public void setInventario(Inventario inventario) {
-        this.inventario = inventario;
-    }
-
-    /**
-     * @return the desde
-     */
-    public Date getDesde() {
-        return desde;
-    }
-
-    /**
-     * @param desde the desde to set
-     */
-    public void setDesde(Date desde) {
-        this.desde = desde;
-    }
-
-    /**
-     * @return the hasta
-     */
-    public Date getHasta() {
-        return hasta;
-    }
-
-    /**
-     * @param hasta the hasta to set
-     */
-    public void setHasta(Date hasta) {
-        this.hasta = hasta;
+    public void setProdxprov(Productoxproveedor prodxprov) {
+        this.prodxprov = prodxprov;
     }
 
 }
