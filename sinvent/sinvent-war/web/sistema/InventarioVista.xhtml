@@ -29,7 +29,7 @@
                     <ice:panelGrid columns="7">
                         <ice:outputLabel value="Producto:" for="prod" />
                         <ice:selectOneMenu value="#{inventario.producto}" partialSubmit="true">
-                            <f:selectItems value="#{productos.comboMaestro}"/>
+                            <f:selectItems value="#{productos.comboProductos}"/>
                         </ice:selectOneMenu>
                     </ice:panelGrid>
                     <ice:panelGrid columns="2"> 
@@ -74,9 +74,9 @@
                                        currentPageReportTemplate="{totalRecords} Registro(s) encontrado(s). Página(s): {currentPage} de {totalPages}"
                                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                        rows="30" >
-                            <ace:row condition="group" groupBy="#{item.producto.proveedor.toString()}" pos="before" styleClass="grupo">
+                            <ace:row condition="group" groupBy="#{item.proveedor.toString()}" pos="before" styleClass="grupo">
                                 <ace:column style="text-align: center" colspan="10">
-                                    <h:outputText value="#{item.producto.proveedor.toString()}" />
+                                    <h:outputText value="#{item.proveedor.toString()}" />
                                 </ace:column>
                             </ace:row>
                             <ace:column  headerText="Registro" style="text-align: right">
@@ -94,7 +94,7 @@
                                 </h:outputText>
                             </ace:column>
                             <ace:column  headerText="Producto"  style="text-align: left" >
-                                <h:outputText  value="#{item.producto.producto.nombre}"/>
+                                <h:outputText  value="#{item.producto.nombre}"/>
                             </ace:column>
                             <ace:column  headerText="Cantidad" style="text-align: left" >
                                 <h:outputText  value="#{item.cantidad}"/>
@@ -104,7 +104,7 @@
                                     <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
                                 </h:outputText>
                             </ace:column>
-                            <ace:column  headerText="Descripciòn" style="text-align: left" >
+                            <ace:column  headerText="Descripción" style="text-align: left" >
                                 <h:outputText  value="#{item.descripcion}"/>
                             </ace:column>
                         </ace:dataTable>
@@ -126,14 +126,14 @@
                         <ice:outputLabel value="Producto:" for="prod" />
                         <ice:outputText id="prod" value="#{inventario.producto.toString()}" title="Producto" />
                         <ice:outputLabel value="Proveedor:" for="proveedor" />
-                        <ice:selectOneMenu value="#{inventario.proveedor}" partialSubmit="true">
+                        <ice:selectOneMenu value="#{inventario.inventario.proveedor}" partialSubmit="true">
                             <f:selectItems value="#{proveedores.comboProveedoresF}"/>
                         </ice:selectOneMenu>
                         <ice:outputLabel value="Cantidad:" for="cant" />
                         <ice:inputText id="cant" value="#{inventario.inventario.cantidad}" title="Cantidad" />
                         <ice:outputLabel value="Precio Unitario:" for="precuni" />
                         <ice:inputText id="precuni" value="#{inventario.inventario.precioUnitario}" title="Precio Unitario" />
-                        <ice:outputLabel value="Descripciòn:" for="descp" />
+                        <ice:outputLabel value="Descripción:" for="descp" />
                         <ice:inputTextarea id="descp" value="#{inventario.inventario.descripcion}" title="Descrpciòn" />
                     </h:panelGrid>
                     <ice:panelGrid columns="1" width="100%">
