@@ -251,7 +251,7 @@ public class InventarioBean implements Serializable {
             inventario.setProducto(producto);
             inventario.setProveedor(inventario.getProveedor());
             ejbInventario.create(inventario, getSeguridadBean().getEntidad().getUserid());
-            producto.setStock(producto.getStock() + inventario.getCantidad());
+            producto.setStock(producto.getStock() != null ? producto.getStock() : 0 + inventario.getCantidad());
             ejbProductos.edit(producto, getSeguridadBean().getEntidad().getUserid());
         } catch (InsertarException | ConsultarException | GrabarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());

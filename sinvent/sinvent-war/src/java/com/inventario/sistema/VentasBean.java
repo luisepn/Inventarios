@@ -217,7 +217,7 @@ public class VentasBean implements Serializable {
                 dv.setRegistroVenta(registro);
                 ejbDetalleVenta.create(dv, seguridadBean.getEntidad().getUserid());
                 Productos p = dv.getProducto();
-                p.setStock(p.getStock() - dv.getCantidad());
+                p.setStock(p.getStock() != null ? p.getStock() : 0 - dv.getCantidad());
                 ejbProductos.edit(p, seguridadBean.getEntidad().getUserid());
 
                 Inventario inventario = new Inventario();
