@@ -145,6 +145,7 @@
                                 paginatorAlwaysVisible="true"
                                 value="#{ventas.listaDetalle}"
                                 var="registro"
+                                rowIndexVar="row"
                                 binding="#{fila}">
                                 <f:facet name="header">Detalle</f:facet>
 
@@ -239,6 +240,7 @@
                                 <ace:dataTable 
                                     paginatorAlwaysVisible="true"
                                     value="#{ventas.listaDetalle}"
+                                    rowIndexVar="row"
                                     var="reg">
                                     <f:facet name="header">Detalle</f:facet>
 
