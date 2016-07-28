@@ -171,6 +171,7 @@ public class ProveedoresBean implements Serializable {
     public String nuevo() {
         setProveedor(new Proveedores());
         setDireccion(new Direcciones());
+        proveedor.setActivo(Boolean.TRUE);
         getFormulario().insertar();
         return null;
     }
@@ -191,29 +192,52 @@ public class ProveedoresBean implements Serializable {
 
     private boolean validar() {
         if (getProveedor().getNombre() == null || getProveedor().getNombre().isEmpty()) {
-            MensajesErrores.advertencia("Nombre de la institución es necesario");
+            MensajesErrores.advertencia("Nombre es necesario");
             return true;
         }
-        if (getDireccion().getPrimaria() == null || getDireccion().getPrimaria().isEmpty()) {
-            MensajesErrores.advertencia("Calle primaria es necesaria");
+        if (getProveedor().getCodigo() == null || getProveedor().getCodigo().isEmpty()) {
+            MensajesErrores.advertencia("Código es necesario");
             return true;
         }
-        if (getDireccion().getNumero() == null || getDireccion().getNumero().isEmpty()) {
-            MensajesErrores.advertencia("Número es necesario");
+        if (getProveedor().getDescripcion()== null || getProveedor().getDescripcion().isEmpty()) {
+            MensajesErrores.advertencia("Descripción es necesaria");
             return true;
         }
-        if (getDireccion().getSecundaria() == null || getDireccion().getSecundaria().isEmpty()) {
-            MensajesErrores.advertencia("Calle secundaria es necesaria");
-            return true;
+        if (formulario.isNuevo()) {
+            Map parametros = new HashMap();
+            parametros.put(";where", " o.codigo=:codigo and o.activo = true");
+            parametros.put("codigo", proveedor.getCodigo());
+
+            try {
+                if (ejbProveedores.contar(parametros) > 0) {
+                    MensajesErrores.advertencia("Código duplicado");
+                    return true;
+                }
+            } catch (ConsultarException ex) {
+                Logger.getLogger(ProveedoresBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        if (getDireccion().getTelefono() == null || getDireccion().getTelefono().isEmpty()) {
-            MensajesErrores.advertencia("Número telefónico es necesario");
-            return true;
-        }
-        if (getDireccion().getCiudad() == null) {
-            MensajesErrores.advertencia("Ciudad es necesaria");
-            return true;
-        }
+//        if (getDireccion().getPrimaria() == null || getDireccion().getPrimaria().isEmpty()) {
+//            MensajesErrores.advertencia("Calle primaria es necesaria");
+//            return true;
+//        }
+//        if (getDireccion().getNumero() == null || getDireccion().getNumero().isEmpty()) {
+//            MensajesErrores.advertencia("Número es necesario");
+//            return true;
+//        }
+//        if (getDireccion().getSecundaria() == null || getDireccion().getSecundaria().isEmpty()) {
+//            MensajesErrores.advertencia("Calle secundaria es necesaria");
+//            return true;
+//        }
+//        if (getDireccion().getTelefono() == null || getDireccion().getTelefono().isEmpty()) {
+//            MensajesErrores.advertencia("Número telefónico es necesario");
+//            return true;
+//        }
+//        if (getDireccion().getCiudad() == null) {
+//            MensajesErrores.advertencia("Ciudad es necesaria");
+//            return true;
+//        }
+
         return false;
     }
 
@@ -242,12 +266,6 @@ public class ProveedoresBean implements Serializable {
     }
 
     public String grabar() {
-
-        if (!perfil.getModificacion()) {
-            MensajesErrores.advertencia("No tiene autorización para modificar un registro");
-            return null;
-        }
-
         if (validar()) {
             return null;
         }
@@ -265,13 +283,10 @@ public class ProveedoresBean implements Serializable {
     }
 
     public String borrar() {
-        if (!perfil.getBorrado()) {
-            MensajesErrores.advertencia("No tiene autorización para borrar un registro");
-            return null;
-        }
         try {
-            ejbProveedores.remove(getProveedor(), getSeguridadBean().getEntidad().getUserid());
-        } catch (BorrarException ex) {
+            proveedor.setActivo(Boolean.FALSE);
+            ejbProveedores.edit(getProveedor(), getSeguridadBean().getEntidad().getUserid());
+        } catch (GrabarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
             Logger.getLogger(ProveedoresBean.class.getName()).log(Level.SEVERE, null, ex);
         }

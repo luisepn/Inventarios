@@ -26,10 +26,10 @@
                            header="#{productos.perfil.menu.texto}"
                            closable="false"
                            toggleable="true"       >
-                    <ice:panelGrid columns="7">
-                        <ice:outputLabel value="Nombre" for="nom" />
-                        <ice:inputText id="nombre" value="#{productos.nombre}" title="Nom" />
-                        <ice:outputLabel value="Categoria:" for="cate" />
+                    <ice:panelGrid columns="2">
+                        <ice:outputLabel value="Nombre" />
+                        <ice:inputText id="nombre" value="#{productos.nombre}"/>
+                        <ice:outputLabel value="Categoria:" />
                         <ice:selectOneMenu value="#{productos.categoria}" partialSubmit="true">
                             <f:selectItems value="#{tablaDeCodigos.categoriaProductos}"/>
                         </ice:selectOneMenu>
@@ -95,8 +95,11 @@
                             <ace:column  headerText="Nombre" style="text-align: left" >
                                 <h:outputText  value="#{item.nombre}"/>
                             </ace:column>
+                            <ace:column  headerText="Descripción" style="text-align: left" >
+                                <h:outputText  value="#{item.descripcion}"/>
+                            </ace:column>
                             <ace:column  headerText="Imagen" >
-                                <ice:graphicImage value="#{archivosBean.traerArchivo(item.imagen.id).archivo}" id="resourceGraphicImage" style="height: 50px " />
+                                <ice:graphicImage value="#{archivosBean.traerArchivo(item.imagen.id).archivo}" style="height: 50px " />
                             </ace:column>
                             <ace:column  headerText="Unidad de Médida "  style="text-align: left" >
                                 <h:outputText  value="#{item.unidadMedida.nombre}"/>
@@ -125,17 +128,19 @@
                         <ace:tabPane>
                             <f:facet name="label">Inf. General</f:facet>
                             <h:panelGrid columns="2"  >
-                                <ice:outputLabel value="Código:" for="nombresn" />
-                                <ice:inputText id="nombresn" value="#{productos.producto.codigo}" title="Código" />
-                                <ice:outputLabel value="Nombre:" for="nombresn1" />
-                                <ice:inputText id="nombresn1" value="#{productos.producto.nombre}" title="Nombre" />
-                                <ice:outputLabel value="Precio:" for="prec" />
-                                <ice:inputText id="prec" value="#{productos.producto.precio}" title="Precio" />
-                                <ice:outputLabel value="Unidad Medidad:" for="apellidosn" />
+                                <ice:outputLabel value="Código:" />
+                                <ice:inputText value="#{productos.producto.codigo}" title="Código" />
+                                <ice:outputLabel value="Nombre:" />
+                                <ice:inputText value="#{productos.producto.nombre}" title="Nombre" />
+                                <ice:outputLabel value="Descripción"/>
+                                <ice:inputTextarea rows="5" cols="19" value="#{productos.producto.descripcion}" title="Descripción" />
+                                <ice:outputLabel value="Precio:" />
+                                <ice:inputText value="#{productos.producto.precio}" title="Precio" />
+                                <ice:outputLabel value="Unidad Medidad:" />
                                 <ice:selectOneMenu value="#{productos.producto.unidadMedida}" partialSubmit="true">
                                     <f:selectItems value="#{tablaDeCodigos.comboUnidadMedida}"/>
                                 </ice:selectOneMenu>                                    
-                                <ice:outputLabel value="Categoria:" for="cate" />
+                                <ice:outputLabel value="Categoria:"/>
                                 <ice:selectOneMenu value="#{productos.producto.categoria}" partialSubmit="true">
                                     <f:selectItems value="#{tablaDeCodigos.categoriaProductos}"/>
                                 </ice:selectOneMenu>

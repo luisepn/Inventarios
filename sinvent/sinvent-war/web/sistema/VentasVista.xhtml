@@ -75,7 +75,7 @@
                             </ace:column>
                             <ace:column headerText="Acciones" style="text-align: left" >
                                 <ace:menuButton id="menuButton" effect="slide" effectDuration="200" value="..." >
-                                    <!--<ace:menuItem action="#{ventas.imprimir()}" value="Borrar" icon="ui-icon ui-icon-trash"/>-->
+                                    <ace:menuItem action="#{ventas.imprimir(item)}" value="Detalle" icon="ui-icon ui-icon-script"/>
                                 </ace:menuButton>
                             </ace:column> 
                             <ace:column  headerText="Fecha"  style="text-align: left" >
@@ -117,9 +117,10 @@
                                                   listVar="producto" rows="5" 
                                                   valueChangeListener="#{ventas.cambiaProductos}" width="400px"  title="Apellidos o C.I. del paciente">
                                 <f:facet name="selectInputText">
-                                    <ice:panelGrid columnClasses="tipo" columns="2" id="gcolumnas" width="400px" style="background-color: lightgrey;text-align: left">
+                                    <ice:panelGrid columnClasses="tipo" columns="3" id="gcolumnas" width="400px" style="background-color: lightgrey;text-align: left">
                                         <ice:outputText value="#{producto.categoria.nombre}"/>
                                         <ice:outputText value="#{producto.nombre}"/>
+                                        <ice:outputText value="#{producto.stock}"/>
                                     </ice:panelGrid>
                                 </f:facet>
                             </ice:selectInputText>
@@ -180,7 +181,7 @@
                                             <f:convertNumber currencySymbol="$" maxFractionDigits="2" type="currency" />
                                         </h:outputText>
                                     </ace:column>
-                                    <ace:column colspan="3"/>
+                                    <!--<ace:column colspan="1"/>-->
                                 </ace:row>
                             </ace:dataTable>
                         </ice:panelGrid>
@@ -196,6 +197,84 @@
                     </ace:menuBar>
 
 
+                </ace:dialog>
+
+
+                <ace:dialog 
+                    header="#{ventas.perfil.menu.texto}"
+                    closable="false"
+                    modal="true"
+                    draggable="false"
+                    showEffect="clip"
+                    hideEffect="fade"
+                    rendered="#{ventas.formularioImprimir.mostrar}"
+                    visible="#{ventas.formularioImprimir.mostrar}">
+
+                    <ice:panelGrid  width="100%"  style="text-align: center">
+                        <!--<ice:menuBar>-->
+                        <ice:panelGrid columns="2"  width="100%" >
+                            <h:commandButton value="Imprimir">
+                                <ace:printer for="imprimir"/>
+                            </h:commandButton>
+                            <h:commandButton value="Salir" action="#{ventas.formularioImprimir.cancelar()}"/>
+                        </ice:panelGrid>
+                        <!--</ice:menuBar>-->
+
+                        <ace:panel style="width: 100%;">
+                            <ice:panelGrid id="imprimir" style="text-align: center; padding: 50px;" width="100%">
+
+                                <ice:panelGrid columns="2" width="100%" style="text-align: center">
+                                    <ice:graphicImage value="#{seguridadBean.centro.logotipo!=null? archivosBean.traerArchivo(seguridadBean.centro.logotipo).archivo:null}" id="logo"  alt="logo" height="100"/>
+                                    <!--<ice:outputText value="#{seguridadBean.centro.nombre}" rendered="#{seguridadBean.centro!=null}" style="font-size: 20px; color: #195f88; font-weight: 900;"/>-->
+                                </ice:panelGrid>
+                                <ice:panelGrid columns="2" style="text-align: left; ">
+                                    <ice:outputLabel value="Cliente: " styleClass="bold"/>
+                                    <ice:outputLabel value="#{ventas.registro.cliente.toString()}" />
+                                    <ice:outputLabel value="Fecha:" styleClass="bold"/> 
+                                    <ice:outputLabel value="#{ventas.registro.fecha}" >
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </ice:outputLabel>
+                                </ice:panelGrid>
+
+                                <ace:dataTable 
+                                    paginatorAlwaysVisible="true"
+                                    value="#{ventas.listaDetalle}"
+                                    var="reg">
+                                    <f:facet name="header">Detalle</f:facet>
+
+                                    <ace:column  headerText="Registro" style="text-align: right">
+                                        <h:outputText value="#{row+1}"/>
+                                    </ace:column>
+                                    <ace:column  headerText="Producto" style="text-align: left">
+                                        <h:outputText  value="#{reg.producto.toString()}"/>
+                                    </ace:column>
+                                    <ace:column  headerText="Cantidad" style="text-align: right">
+                                        <h:outputText  value="#{reg.cantidad}"/>
+                                    </ace:column>
+                                    <ace:column  headerText="Precio Unitario" style="text-align: left">
+                                        <h:outputText  value="#{reg.precioUnitario}">
+                                            <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
+                                        </h:outputText>
+                                    </ace:column>
+                                    <ace:column  headerText="Precio Total" style="text-align: right">
+                                        <h:outputText  value="#{reg.precioUnitario * reg.cantidad}">
+                                            <f:convertNumber type="currency" currencySymbol="$"  maxFractionDigits="2" minFractionDigits="2"/>
+                                        </h:outputText>
+                                    </ace:column>
+                                    <ace:row condition="group" groupBy="#{ventas.listaDetalle}" pos="after" >
+                                        <ace:column colspan="4" style="text-align: right">
+                                            <h:outputText value="TOTAL" styleClass="bold"/>
+                                        </ace:column>
+                                        <ace:column style="text-align: right" >
+                                            <h:outputText value="#{ventas.suma}" styleClass="bold">
+                                                <f:convertNumber currencySymbol="$" maxFractionDigits="2" type="currency" />
+                                            </h:outputText>
+                                        </ace:column>
+                                    </ace:row>
+                                </ace:dataTable>
+                            </ice:panelGrid>
+                        </ace:panel>
+                    </ice:panelGrid>
                 </ace:dialog>
             </ui:define>
             <!-- Fin -->

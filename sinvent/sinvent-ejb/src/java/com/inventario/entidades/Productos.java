@@ -7,7 +7,6 @@ package com.inventario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,11 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,7 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Productos.findByPrecio", query = "SELECT p FROM Productos p WHERE p.precio = :precio"),
     @NamedQuery(name = "Productos.findByStock", query = "SELECT p FROM Productos p WHERE p.stock = :stock"),
     @NamedQuery(name = "Productos.findByActivo", query = "SELECT p FROM Productos p WHERE p.activo = :activo"),
-    @NamedQuery(name = "Productos.findByNombre", query = "SELECT p FROM Productos p WHERE p.nombre = :nombre")})
+    @NamedQuery(name = "Productos.findByNombre", query = "SELECT p FROM Productos p WHERE p.nombre = :nombre"),
+    @NamedQuery(name = "Productos.findByDescripcion", query = "SELECT p FROM Productos p WHERE p.descripcion = :descripcion")})
 public class Productos implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -59,12 +57,9 @@ public class Productos implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "producto")
-    private List<Productoxproveedor> productoxproveedorList;
-    @OneToMany(mappedBy = "producto")
-    private List<DetalleVenta> detalleVentaList;
-    @OneToMany(mappedBy = "producto")
-    private List<Inventario> inventarioList;
+    @Size(max = 2147483647)
+    @Column(name = "descripcion")
+    private String descripcion;
     @JoinColumn(name = "unidad_medida", referencedColumnName = "id")
     @ManyToOne
     private Codigos unidadMedida;
@@ -130,31 +125,12 @@ public class Productos implements Serializable {
         this.nombre = nombre;
     }
 
-    @XmlTransient
-    public List<Productoxproveedor> getProductoxproveedorList() {
-        return productoxproveedorList;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setProductoxproveedorList(List<Productoxproveedor> productoxproveedorList) {
-        this.productoxproveedorList = productoxproveedorList;
-    }
-
-    @XmlTransient
-    public List<DetalleVenta> getDetalleVentaList() {
-        return detalleVentaList;
-    }
-
-    public void setDetalleVentaList(List<DetalleVenta> detalleVentaList) {
-        this.detalleVentaList = detalleVentaList;
-    }
-
-    @XmlTransient
-    public List<Inventario> getInventarioList() {
-        return inventarioList;
-    }
-
-    public void setInventarioList(List<Inventario> inventarioList) {
-        this.inventarioList = inventarioList;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Codigos getUnidadMedida() {

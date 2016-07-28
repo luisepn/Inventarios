@@ -106,7 +106,7 @@ public class ReporInventarioBean implements Serializable {
         Map parametros = new HashMap();
         String orden = "";
         if (scs.length == 0) {
-            orden = "o.fecha asc";
+            orden = "o.fecha desc";
         } else {
             orden += " o." + scs[0].getPropertyName() + (scs[0].isAscending() ? " ASC" : " DESC");
         }

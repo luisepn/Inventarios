@@ -25,14 +25,16 @@
                 <ace:panel id="panel"
                            header="#{productosxProveedor.perfil.menu.texto}"
                            closable="false"
-                           toggleable="true"       >
-                    <ice:panelGrid columns="7">
+                           toggleable="true">
+                    <ice:panelGrid columns="2">
+                        <ice:outputLabel value="Categoria:" />
+                        <ice:selectOneMenu value="#{productos.categoria}" partialSubmit="true">
+                            <f:selectItems value="#{tablaDeCodigos.categoriaProductos}"/>
+                        </ice:selectOneMenu>
                         <ice:outputLabel value="Producto:" for="prod" />
                         <ice:selectOneMenu value="#{productosxProveedor.producto}" partialSubmit="true">
                             <f:selectItems value="#{productos.comboProductos}"/>
                         </ice:selectOneMenu>
-                    </ice:panelGrid>
-                    <ice:panelGrid columns="7">
                         <ice:outputLabel value="Proveedor:" for="prov" />
                         <ice:selectOneMenu value="#{productosxProveedor.proveedor}" partialSubmit="true">
                             <f:selectItems value="#{proveedores.comboProveedores}"/>

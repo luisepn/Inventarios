@@ -132,6 +132,7 @@ public class ProductosBean implements Serializable {
             MensajesErrores.advertencia("No tiene autorización para crear un registro");
         }
         setProducto(new Productos());
+        producto.setStock(0);
         logo = new Archivos();
 
         formulario.insertar();
@@ -238,6 +239,20 @@ public class ProductosBean implements Serializable {
             MensajesErrores.advertencia("Es necesario código");
             return true;
         }
+        if (formulario.isNuevo()) {
+            Map parametros = new HashMap();
+            parametros.put(";where", " o.codigo=:codigo and o.activo = true");
+            parametros.put("codigo", producto.getCodigo());
+
+            try {
+                if (ejbProducto.contar(parametros) > 0) {
+                    MensajesErrores.advertencia("Código duplicado");
+                    return true;
+                }
+            } catch (ConsultarException ex) {
+                Logger.getLogger(ProductosBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         if ((getProducto().getNombre() == null) || (getProducto().getNombre().isEmpty())) {
             MensajesErrores.advertencia("Es necesario nombre");
@@ -315,8 +330,9 @@ public class ProductosBean implements Serializable {
             MensajesErrores.advertencia("No tiene autorización para borrar un registro");
         }
         try {
-            ejbProducto.remove(getProducto(), seguridadBean.getEntidad().getUserid());
-        } catch (BorrarException ex) {
+            producto.setActivo(Boolean.FALSE);
+            ejbProducto.edit(getProducto(), seguridadBean.getEntidad().getUserid());
+        } catch (GrabarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
             Logger.getLogger(ProductosBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -334,8 +350,13 @@ public class ProductosBean implements Serializable {
     public SelectItem[] getComboProductos() {
         try {
             Map parametros = new HashMap();
+            String where = "o.activo = true";
+            if (categoria != null) {
+                where += " and o.categoria=:categoria";
+                parametros.put("categoria", categoria);
+            }
             parametros.put(";orden", "o.nombre");
-            parametros.put(";where", " o.activo = true");
+            parametros.put(";where", where);
             return Combos.SelectItems(ejbProducto.encontarParametros(parametros), true);
         } catch (ConsultarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());

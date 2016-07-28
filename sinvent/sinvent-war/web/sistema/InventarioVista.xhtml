@@ -26,8 +26,12 @@
                            header="#{inventario.perfil.menu.texto}"
                            closable="false"
                            toggleable="true"       >
-                    <ice:panelGrid columns="7">
-                        <ice:outputLabel value="Producto:" for="prod" />
+                    <ice:panelGrid columns="2">
+                        <ice:outputLabel value="Categoria:" />
+                        <ice:selectOneMenu value="#{productos.categoria}" partialSubmit="true">
+                            <f:selectItems value="#{tablaDeCodigos.categoriaProductos}"/>
+                        </ice:selectOneMenu>
+                        <ice:outputLabel value="Producto:" />
                         <ice:selectOneMenu value="#{inventario.producto}" partialSubmit="true">
                             <f:selectItems value="#{productos.comboProductos}"/>
                         </ice:selectOneMenu>

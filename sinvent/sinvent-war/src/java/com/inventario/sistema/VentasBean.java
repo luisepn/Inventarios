@@ -56,6 +56,7 @@ public class VentasBean implements Serializable {
     private SeguridadBean seguridadBean;
 
     private Formulario formulario = new Formulario();
+    private Formulario formularioImprimir = new Formulario();
     private LazyDataModel<RegistroVenta> listaVentas;
     private RegistroVenta registro;
     private Codigos categoria;
@@ -217,7 +218,7 @@ public class VentasBean implements Serializable {
                 dv.setRegistroVenta(registro);
                 ejbDetalleVenta.create(dv, seguridadBean.getEntidad().getUserid());
                 Productos p = dv.getProducto();
-                p.setStock(p.getStock() != null ? p.getStock() : 0 - dv.getCantidad());
+                p.setStock(p.getStock() - dv.getCantidad());
                 ejbProductos.edit(p, seguridadBean.getEntidad().getUserid());
 
                 Inventario inventario = new Inventario();
@@ -238,6 +239,24 @@ public class VentasBean implements Serializable {
         formulario.cancelar();
         buscar();
         clave = "";
+        imprimir(registro);
+        return null;
+    }
+
+    public String imprimir(RegistroVenta venta) {
+        registro = venta;
+        Map parametro = new HashMap();
+        parametro.put(";where", " o.registroVenta=:venta");
+        parametro.put("venta", venta);
+
+        try {
+
+            listaDetalle = ejbDetalleVenta.encontarParametros(parametro);
+
+        } catch (ConsultarException ex) {
+            Logger.getLogger(VentasBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        formularioImprimir.insertar();
         return null;
     }
 
@@ -250,12 +269,13 @@ public class VentasBean implements Serializable {
     }
 
     public String insertarDetalle() {
-        if (detalle == null) {
-
-        }
-
         if (detalle.getCantidad() == null || detalle.getCantidad() < 0) {
             MensajesErrores.advertencia("Cantidad es necesaria y debe ser positiva");
+            return null;
+        }
+
+        if (detalle.getCantidad() > detalle.getProducto().getStock()) {
+            MensajesErrores.advertencia("Producto no está en stock");
             return null;
         }
 
@@ -511,6 +531,20 @@ public class VentasBean implements Serializable {
      */
     public void setDetalle(DetalleVenta detalle) {
         this.detalle = detalle;
+    }
+
+    /**
+     * @return the formularioImprimir
+     */
+    public Formulario getFormularioImprimir() {
+        return formularioImprimir;
+    }
+
+    /**
+     * @param formularioImprimir the formularioImprimir to set
+     */
+    public void setFormularioImprimir(Formulario formularioImprimir) {
+        this.formularioImprimir = formularioImprimir;
     }
 
 }

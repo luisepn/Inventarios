@@ -248,19 +248,19 @@ public abstract class PersonasBean implements Serializable {
             MensajesErrores.advertencia("email es obligatorio");
             return true;
         }
-        if ((entidad.getUserid() == null) || (entidad.getUserid().isEmpty())) {
-            MensajesErrores.advertencia("User ID es obligatorio");
-            return true;
-        }
-
-        if ((entidad.getFecha() == null)) {
-            MensajesErrores.advertencia("Fecha nacimiento obligatorio");
-            return true;
-        }
-        if ((entidad.getFecha().after(new Date()))) {
-            MensajesErrores.advertencia("Fecha nacimiento menor a hoy");
-            return true;
-        }
+//        if ((entidad.getUserid() == null) || (entidad.getUserid().isEmpty())) {
+//            MensajesErrores.advertencia("User ID es obligatorio");
+//            return true;
+//        }
+//
+//        if ((entidad.getFecha() == null)) {
+//            MensajesErrores.advertencia("Fecha nacimiento obligatorio");
+//            return true;
+//        }
+//        if ((entidad.getFecha().after(new Date()))) {
+//            MensajesErrores.advertencia("Fecha nacimiento menor a hoy");
+//            return true;
+//        }
 
 //        Map parametros = new HashMap();
 //        parametros.put(";where", " o.activo = true and o.userid=:userid");

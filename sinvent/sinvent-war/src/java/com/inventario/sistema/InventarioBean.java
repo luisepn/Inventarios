@@ -5,6 +5,7 @@
  */
 package com.inventario.sistema;
 
+import com.inventario.entidades.Codigos;
 import com.inventario.entidades.Inventario;
 import com.inventario.entidades.Perfil;
 import com.inventario.entidades.Productos;
@@ -55,6 +56,7 @@ public class InventarioBean implements Serializable {
     private Formulario formulario = new Formulario();
     private LazyDataModel<Inventario> listaInventarios;
     private Inventario inventario;
+    private Codigos categoria;
     private Productos producto;
     private Productoxproveedor prodxprov;
     private Perfil perfil;
@@ -251,7 +253,7 @@ public class InventarioBean implements Serializable {
             inventario.setProducto(producto);
             inventario.setProveedor(inventario.getProveedor());
             ejbInventario.create(inventario, getSeguridadBean().getEntidad().getUserid());
-            producto.setStock(producto.getStock() != null ? producto.getStock() : 0 + inventario.getCantidad());
+            producto.setStock(producto.getStock() + inventario.getCantidad());
             ejbProductos.edit(producto, getSeguridadBean().getEntidad().getUserid());
         } catch (InsertarException | ConsultarException | GrabarException ex) {
             MensajesErrores.fatal(ex.getMessage() + "-" + ex.getCause());
